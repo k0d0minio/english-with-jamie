@@ -12,7 +12,7 @@ import {
 } from "drizzle-orm/pg-core";
 import type { BlockData } from "@/lib/lesson-types";
 
-export type { BlockData, ClozeItem, ExerciseData, ExerciseItem, McItem, SlideData } from "@/lib/lesson-types";
+export type { BlockData, ClozeItem, ExerciseData, ExerciseItem, MatchItem, McItem, OrderItem, PollItem, SlideData } from "@/lib/lesson-types";
 
 export const lessonStatus = pgEnum("lesson_status", ["draft", "scheduled", "done"]);
 export const blockKind = pgEnum("block_kind", ["slide", "exercise"]);

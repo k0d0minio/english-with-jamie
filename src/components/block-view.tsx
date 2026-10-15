@@ -103,7 +103,23 @@ export function SlideView({
 }) {
   const layout = data.layout ?? (data.art ? "split" : "plain");
   const kicker = data.kicker ?? (layout === "talk" ? "Your turn" : lessonTitle);
-  const title = <h2 className={cn("font-semibold leading-[1.05] tracking-tight text-balance", titleSize(layout, compact))}>{data.title}</h2>;
+  const heading = <h2 className={cn("font-semibold leading-[1.05] tracking-tight text-balance", titleSize(layout, compact))}>{data.title}</h2>;
+  const title = data.stat ? (
+    <div className="space-y-3">
+      <span
+        className={cn(
+          "inline-block rounded-2xl px-4 py-1 font-bold tabular-nums tracking-tight",
+          compact ? "text-xl" : "text-3xl md:text-4xl",
+          layout === "cover" ? "bg-white/15 text-[var(--art-amber)]" : "bg-warm-soft text-warm",
+        )}
+      >
+        {data.stat}
+      </span>
+      {heading}
+    </div>
+  ) : (
+    heading
+  );
   const body = data.body ? <Markdown>{data.body}</Markdown> : null;
   const art = data.art ? <SlideArt name={data.art} /> : null;
   const sideBySide = (layout === "cover" || layout === "split" || layout === "talk") && art;

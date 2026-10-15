@@ -66,6 +66,18 @@ body {
   --art-ice: #edf6f9;
   --art-sky: #cfe3ec;
   --art-skin: #f0c7a2;
+  --art-wood: #a8754a;
+  --art-wood-dark: #6e4a2c;
+  --art-bronze: #b98a46;
+  --art-bronze-dark: #5b4636;
+  --art-gold: #e8bd52;
+  --art-gold-dark: #b98b2a;
+  --art-silver: #d3dcdf;
+  --art-silver-dark: #9aa7ac;
+  --art-concrete: #c4bcad;
+  --art-soil: #bc9d76;
+  --art-dough: #d9a35b;
+  --art-lemon: #f2d04b;
 }
 
 .art g[class^="art-"] {
@@ -84,6 +96,26 @@ body {
 .art-spin { animation: art-spin 9s linear infinite; }
 .art-dot { animation: art-dot 1.4s ease-in-out infinite; }
 .art-twinkle { animation: art-twinkle 3s ease-in-out infinite; }
+.art-lift { animation: art-lift 9s ease-in-out infinite; }
+.art-float { animation: art-float 6s ease-in-out infinite alternate; }
+.art-pour { stroke-dasharray: 10 12; animation: art-pour 0.9s linear infinite; }
+.art-chute { animation: art-chute 5s linear infinite; }
+.art-swing { animation: art-swing 2.6s ease-in-out infinite; transform-origin: 50% 0 !important; }
+.art-ember { animation: art-ember 5s linear infinite; }
+.art-neck { animation: art-neck 5s ease-in-out infinite; transform-origin: 0 100% !important; }
+.art-blink { animation: art-blink 5s ease-in-out infinite; }
+.art-tail { animation: art-tail 3s ease-in-out infinite; transform-origin: 0 100% !important; }
+.art-flash { animation: art-flash 4.5s ease-out infinite; }
+.art-smoke { animation: art-smoke 3.2s ease-out infinite; }
+.art-peek { animation: art-peek 3.6s ease-in-out infinite; }
+.art-elevator { animation: art-elevator 7s ease-in-out infinite alternate; }
+.art-flicker { animation: art-flicker 4s ease-in-out infinite; }
+.art-hop { animation: art-hop 2.2s ease-out infinite; }
+.art-spin-y { animation: art-spin-y 5s ease-in-out infinite; }
+.art-dangle { animation: art-dangle 5s ease-in-out infinite; }
+.art-walk { animation: art-walk 11s ease-in-out infinite alternate; }
+.art-graze { animation: art-graze 5s ease-in-out infinite; transform-origin: 100% 0 !important; }
+.art-slide { animation: art-slide 4s ease-in-out infinite alternate; }
 
 @keyframes art-fall {
   0% { transform: translate(0, 0) rotate(0deg); opacity: 0; }
@@ -105,6 +137,30 @@ body {
 @keyframes art-spin { to { transform: rotate(360deg); } }
 @keyframes art-dot { 0%, 70%, 100% { transform: translateY(0); opacity: 0.35; } 35% { transform: translateY(-5px); opacity: 1; } }
 @keyframes art-twinkle { 0%, 100% { transform: scale(0.6); opacity: 0.35; } 50% { transform: scale(1); opacity: 1; } }
+@keyframes art-lift { 0%, 15%, 100% { transform: translateY(48px); } 50%, 65% { transform: translateY(0); } }
+@keyframes art-float { from { transform: translateX(-6px) rotate(-1.5deg); } to { transform: translateX(16px) rotate(1.5deg); } }
+@keyframes art-pour { to { stroke-dashoffset: -22; } }
+@keyframes art-chute {
+  0% { transform: translate(0, 0); opacity: 0; }
+  8%, 84% { opacity: 1; }
+  100% { transform: translate(220px, 106px); opacity: 0; }
+}
+@keyframes art-swing { 0%, 100% { transform: rotate(-11deg); } 50% { transform: rotate(11deg); } }
+@keyframes art-ember { 0% { transform: translateY(0); opacity: 0; } 15% { opacity: 1; } 100% { transform: translate(12px, -170px); opacity: 0; } }
+@keyframes art-neck { 0%, 100% { transform: rotate(-5deg); } 50% { transform: rotate(4deg); } }
+@keyframes art-blink { 0%, 90%, 100% { transform: scaleY(1); } 94% { transform: scaleY(0.1); } }
+@keyframes art-tail { 0%, 100% { transform: rotate(-8deg); } 50% { transform: rotate(10deg); } }
+@keyframes art-flash { 0%, 78% { transform: scale(0.4); opacity: 0; } 84% { transform: scale(1.1); opacity: 1; } 100% { transform: scale(1.35); opacity: 0; } }
+@keyframes art-smoke { 0% { transform: translateY(0); opacity: 0; } 25% { opacity: 0.7; } 100% { transform: translateY(-22px); opacity: 0; } }
+@keyframes art-peek { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-14px); } }
+@keyframes art-elevator { 0%, 18% { transform: translateY(0); } 42%, 58% { transform: translateY(58px); } 82%, 100% { transform: translateY(87px); } }
+@keyframes art-flicker { 0%, 100% { opacity: 1; } 45% { opacity: 0.45; } 55% { opacity: 0.9; } }
+@keyframes art-hop { 0% { transform: translate(0, 0); opacity: 1; } 60% { transform: translate(-16px, -24px); opacity: 1; } 100% { transform: translate(-26px, 4px); opacity: 0; } }
+@keyframes art-spin-y { 0%, 30%, 100% { transform: scaleX(1); } 55% { transform: scaleX(0.12); } 80% { transform: scaleX(1); } }
+@keyframes art-dangle { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(34px); } }
+@keyframes art-walk { from { transform: translateX(-70px); } to { transform: translateX(70px); } }
+@keyframes art-graze { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(16deg); } }
+@keyframes art-slide { from { transform: translateX(-40px); } to { transform: translateX(150px); } }
 
 /* ---- the stage: one look for every slide in every lesson (block-view.tsx) -------- */
 

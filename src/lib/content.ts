@@ -147,7 +147,7 @@ function parseLesson({ slug, data, body }: RawFile): Lesson {
         else problems.push(`${title}: unknown @layout "${meta.layout}". Use one of: ${SLIDE_LAYOUTS.join(", ")}.`);
       }
       layout ??= blocks.length === 0 ? "cover" : art ? "split" : "plain";
-      blocks.push({ key, kind, data: { kind: "slide", title, body: main, layout, art, kicker: meta.kicker || undefined }, ...extra });
+      blocks.push({ key, kind, data: { kind: "slide", title, body: main, layout, art, kicker: meta.kicker || undefined, stat: meta.stat || undefined }, ...extra });
       continue;
     }
     const fence = /```items[^\n]*\n([\s\S]*?)```/.exec(main);

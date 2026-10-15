@@ -22,18 +22,29 @@ Don't read the app source, other studios, or `content/` beyond the lines above.
 1. **Fix the theme and date.** From the brief if there is one; otherwise the next
    unticked row of the syllabus and the next lesson day Jamie names. If neither gives a
    date, ask once, then proceed with the date he gives.
-2. **Shape it.** Sixty minutes of conversation-led teaching: 6–9 slides, 2–3 exercises,
-   in presentation order. The first slide (`cover`) says what she will be able to do by
-   the end; the last slide (`talk`) is the speaking task she does with Jamie, not an
-   exercise. Give each slide a layout and, where it helps, art from the library in
-   `formats.md`; the same layouts and drawings across lessons are what make it one course.
+2. **Shape it.** Sixty minutes, full: about 20–28 slides and 5–6 exercises, in
+   presentation order, grouped into four or five parts (`@kicker: Part 2 · …`).
+   - The first slide (`cover`) says what she will be able to do by the end; the last
+     (`talk`) is the speaking task she does with Jamie, not an exercise.
+   - **One idea per slide.** A story, a situation or a set of phrases gets its own slide,
+     with something to read (a lead line and three or four bullets), a `@stat`, and its
+     own drawing from the library in `formats.md`. Ask for a new drawing rather than
+     reuse one inside a lesson.
+   - **An exercise after every part,** never two in a row. Across the lesson use at least
+     four of the five item kinds, and end most parts with a poll so the quiz turns into
+     talk.
+   - Mark slides that can be skipped in the lesson's teacher notes; it's fine for a lesson
+     to hold a little more than an hour.
+   The same layouts, parts and drawings across lessons are what make it one course.
 3. **Write the phrases first.** Each lesson ships at least ten lines she can actually
    say, grouped by moment ("at the door", "at the table"). Then the one grammar point
    the theme leans on, shown through those same phrases. Then one listening or
    pronunciation note.
 4. **Write the exercises** in the items grammar: gap-fills on the lesson's phrases,
-   multiple choice on register (which one sounds natural). Six to eight items each.
-   Every answer must appear somewhere on a slide.
+   multiple choice on register (which one sounds natural) or on facts, order and match
+   for anything with a sequence or a cast of characters, polls for opinions. Four to
+   eight items each, with a `|| note` on the fact questions. Every answer must appear
+   somewhere on a slide.
 5. **Write the teacher notes.** Lesson level (`## Teacher notes`): the aim in one line
    and the French-shaped errors this theme invites. Per slide and exercise
    (`### Teacher`): the time, what Jamie says to open it, one or two questions to get

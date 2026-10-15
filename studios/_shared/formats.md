@@ -51,7 +51,9 @@ Anything before the first `## ` is ignored. Order is presentation order.
     else is `plain`.
   - `@art:` one illustration from the library below. Exercises get `quiz` by default.
   - `@kicker:` the small label above the slide (default: the lesson title; `talk`
-    slides say "Your turn").
+    slides say "Your turn"). Use it for the part a slide belongs to: `Part 2 · Parliament Hill`.
+  - `@stat:` one big figure shown above the title: a year, a distance, a count
+    (`1916`, `7.8 km`, `100+ years`). Story slides should have one.
 - **`### Teacher`** starts the private part: everything after it, up to the next `## `,
   is shown to the teacher beside that slide (live and on the lesson page) and never sent
   to the student. Use bullets with bold labels: **Time**, **Say**, **Ask**, **Do**,
@@ -67,19 +69,28 @@ Anything before the first `## ` is ignored. Order is presentation order.
 | `talk` | The speaking task at the end | Two short paragraphs |
 | `plain` | Tables and phrase lists that need the width | Anything |
 
-**Art library** (animated, in `src/components/slide-art.tsx`): `maple` (falling maple
-leaves), `parliament` (Parliament Hill and the river), `canal` (a skater on the frozen
-canal), `tulips` (tulips and a windmill), `lakes` (a loon on a lake at dusk), `chat`
-(two speech bubbles), `quiz` (question cards). A lesson that needs something new asks for
-a drawing to be added to the library; it is then there for every later lesson.
+**Art library** (animated, in `src/components/slide-art.tsx`):
 
-**Exercise items**, one per line inside the fenced `items` block:
+| Group | Names |
+|---|---|
+| General, any lesson | `maple` (falling leaves) · `chat` (speech bubbles) · `quiz` (question cards) · `lakes` (a loon at dusk) |
+| Ottawa | `parliament` · `canal` (skater on the ice) · `tulips` · `locks` (a boat rising in a canal lock) · `logs` (a raftsman on the river) · `raft` (a timber slide) · `bell` (a swinging bell and embers) · `dino` (a dinosaur outside a museum) · `cat` (a cat and its house) · `flag` (a flag and a queue) · `camera` (an old camera and a cigar) · `secret` (a stamped folder) · `bunker` (floors underground) · `tree` (planting a tree) · `castle` (a château at dusk) · `pastry` (a BeaverTail) · `coin` (a spinning gold coin) · `spider` (a giant spider sculpture) · `cow` (a farm in the city) · `trophy` (a silver cup on the ice) |
 
-- Gap-fill: `prompt with ___ => answer`. Alternatives with `/`: `=> went / did go`.
-  A hint after `||`: `=> has lived || present perfect`.
-- Multiple choice: `? prompt | option | option | option => N` where N is the 1-based
-  number of the correct option.
-- Lines starting with `#` are comments.
+A lesson that needs something new asks for a drawing to be added to the library; it is
+then there for every later lesson. Aim for a different drawing on every story slide.
+
+**Exercise items**, one per line inside the fenced `items` block. Mix the kinds:
+
+| Kind | Line | Notes |
+|---|---|---|
+| Gap-fill | `prompt with ___ => answer` | Alternatives with `/`: `=> went / did go`. A hint after `\|\|`: `=> has lived \|\| present perfect`. |
+| Multiple choice | `? prompt \| option \| option \| option => N` | N is the 1-based number of the right option. Two options (`True \| Not true`) show as big side-by-side buttons. |
+| Put in order | `^ prompt \| first \| second \| third` | Write the steps in the right order; the app shuffles them and she taps them back into order. |
+| Match | `& prompt \| left = right \| left = right` | Write the right pairs; the app shuffles the right-hand side. |
+| Poll | `* prompt \| option \| option` | An opinion: any pick counts, and the teacher sees which. The best way into a conversation. |
+
+On every kind except gap-fill, `|| note` at the end of the line is shown once she has
+answered: the story behind the answer, in a sentence. Lines starting with `#` are comments.
 
 The app keys each block by its kind and title (`exercise:could-i`), so renaming an
 exercise after the student has answered it orphans those answers. Rename before, not after.

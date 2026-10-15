@@ -4,7 +4,7 @@ import { and, eq, sql } from "drizzle-orm";
 import { db, schema } from "@/lib/db";
 import { requireRole } from "@/lib/auth";
 import { getLesson } from "@/lib/content";
-import { checkAnswer } from "@/lib/exercise-dsl";
+import { answerText, checkAnswer } from "@/lib/exercise-dsl";
 
 export type AnswerResult = { correct: boolean; attempts: number; reveal?: string };
 
@@ -38,8 +38,7 @@ export async function submitAnswer(lessonSlug: string, blockKey: string, itemInd
     attempts = row?.attempts ?? 1;
   }
 
-  const reveal =
-    !correct && attempts >= REVEAL_AFTER ? (item.kind === "mc" ? item.options[item.correct] : item.answer.split("/")[0].trim()) : undefined;
+  const reveal = !correct && attempts >= REVEAL_AFTER ? answerText(item) : undefined;
   return { correct, attempts, reveal };
 }
 
