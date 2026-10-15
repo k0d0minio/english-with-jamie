@@ -10,7 +10,7 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
       <h1 className="text-3xl font-semibold tracking-tight">
         English <span className="text-accent">with Jamie</span>
       </h1>
-      <p className="mt-2 text-sm text-muted">Enter your access code to open the classroom.</p>
+      <p className="mt-2 text-sm text-muted">Sign in to open the classroom.</p>
       <LoginForm next={next ?? "/"} />
     </div>
   );

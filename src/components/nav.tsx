@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { BookOpen, GraduationCap, Home, ListChecks, Presentation, BarChart3, LogOut } from "lucide-react";
-import type { Role } from "@/lib/session";
+import { BookOpen, GraduationCap, Home, ListChecks, Presentation, BarChart3, LogOut, Users } from "lucide-react";
+import type { Role } from "@/lib/auth";
 import { logout } from "@/actions/auth";
 import { Badge } from "@/components/ui/card";
 
@@ -28,6 +28,11 @@ export function Nav({ role }: { role: Role }) {
           {role === "teacher" ? (
             <Link href="/teach/results" className="flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-muted hover:bg-line/60 hover:text-ink">
               <BarChart3 className="h-4 w-4" /> Results
+            </Link>
+          ) : null}
+          {role === "teacher" ? (
+            <Link href="/teach/accounts" className="flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-muted hover:bg-line/60 hover:text-ink">
+              <Users className="h-4 w-4" /> Accounts
             </Link>
           ) : null}
         </nav>

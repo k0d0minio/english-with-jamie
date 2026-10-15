@@ -24,7 +24,9 @@ Formats the app parses: [`studios/_shared/formats.md`](studios/_shared/formats.m
 
 - **Stack:** Next.js 16 (App Router, Turbopack), React 19, Tailwind v4 (compiled by the
   `@tailwindcss/turbopack` loader in `next.config.ts`), Drizzle + Neon Postgres, Vercel.
-- **Auth:** two access codes (`TEACHER_CODE`, `STUDENT_CODE`) → signed cookie; no accounts.
+- **Auth:** Neon Auth (Managed Better Auth): email + password accounts in the `neon_auth`
+  schema. Neon `admin` role = teacher, `user` = student. Public sign-up is off; the teacher
+  creates accounts at `/teach/accounts`. No email verification yet.
 - **Realtime:** the teacher writes a single `live_state` row; the student's page polls
   `/api/live` every 1.5 s.
 - **Database holds only state, never content:** the student's answers (`item_answers`),
@@ -39,6 +41,7 @@ Formats the app parses: [`studios/_shared/formats.md`](studios/_shared/formats.m
 | `/live` | Presentation / follow mode |
 | `/homework` | Homework files with done state |
 | `/teach/results` | Every exercise the student touched |
+| `/teach/accounts` | Teacher: list accounts, create a new student or teacher |
 | `/reference/*` | Grammar guide, recommendations, things to watch, things to read |
 
 ## Running locally

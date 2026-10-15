@@ -10,10 +10,11 @@ export function LoginForm({ next }: { next: string }) {
   return (
     <form action={action} className="mt-6 space-y-3">
       <input type="hidden" name="next" value={next} />
-      <Input name="code" type="password" placeholder="Access code" autoFocus autoComplete="off" required />
+      <Input name="email" type="email" placeholder="Email" autoFocus autoComplete="username" required />
+      <Input name="password" type="password" placeholder="Password" autoComplete="current-password" required />
       {state?.error ? <p className="text-sm text-danger">{state.error}</p> : null}
       <Button type="submit" className="w-full" disabled={pending}>
-        {pending ? "Checking…" : "Enter"}
+        {pending ? "Signing in…" : "Sign in"}
       </Button>
     </form>
   );
