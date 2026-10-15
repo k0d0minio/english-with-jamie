@@ -2,7 +2,7 @@ import Link from "next/link";
 import { ArrowRight, Presentation } from "lucide-react";
 import { requireRole } from "@/lib/auth";
 import { currentLesson, listGrammar, listHomework } from "@/lib/content";
-import { homeworkDoneSet } from "@/lib/queries";
+import { homeworkDoneSet, lessonBalance } from "@/lib/queries";
 import { getLiveSnapshot } from "@/lib/live";
 import { Badge, Card, Empty } from "@/components/ui/card";
 import { buttonClass } from "@/components/ui/button";
@@ -13,7 +13,14 @@ export const dynamic = "force-dynamic";
 export default async function Home() {
   const role = await requireRole();
   const student = role === "student";
-  const [lesson, homework, done, live, grammar] = await Promise.all([currentLesson(student), listHomework(), homeworkDoneSet(), getLiveSnapshot({ teacher: !student }), listGrammar()]);
+  const [lesson, homework, done, live, grammar, balance] = await Promise.all([
+    currentLesson(student),
+    listHomework(),
+    homeworkDoneSet(),
+    getLiveSnapshot({ teacher: !student }),
+    listGrammar(),
+    lessonBalance(),
+  ]);
   const open = homework.filter((h) => !done.has(h.slug) && (!student || !h.draft)).slice(0, 5);
 
   return (
@@ -92,6 +99,15 @@ export default async function Home() {
       </div>
 
       <div className="space-y-6">
+        <Link href="/account" className="block">
+          <Card className="hover:border-accent/50">
+            <h2 className="text-xs font-semibold uppercase tracking-wide text-muted">Lessons left</h2>
+            <div className={balance.remaining <= 2 ? "mt-1 text-3xl font-semibold text-warm" : "mt-1 text-3xl font-semibold text-accent-strong"}>{balance.remaining}</div>
+            <p className="mt-1 text-sm text-muted">
+              {balance.taught} of {balance.paid} paid lessons completed
+            </p>
+          </Card>
+        </Link>
         <Card>
           <h2 className="mb-3 text-xs font-semibold uppercase tracking-wide text-muted">Reference</h2>
           <ul className="space-y-1 text-sm">

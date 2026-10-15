@@ -28,7 +28,8 @@ Formats the app parses: [`studios/_shared/formats.md`](studios/_shared/formats.m
 - **Realtime:** the teacher writes a single `live_state` row; the student's page polls
   `/api/live` every 1.5 s.
 - **Database holds only state, never content:** the student's answers (`item_answers`),
-  homework ticked off (`homework_done`), and what is live (`live_state`). The tables from
+  homework ticked off (`homework_done`), what is live (`live_state`), and the lesson
+  balance the teacher keeps by hand (`lesson_ledger`: lessons paid, lessons taught). The tables from
   the first cut's in-app editor (`lessons`, `blocks`, `answers`, `homework`) are unused
   and documented for removal in `src/lib/db/schema.ts`.
 
@@ -38,6 +39,7 @@ Formats the app parses: [`studios/_shared/formats.md`](studios/_shared/formats.m
 | `/lessons`, `/lessons/<slug>` | Lesson files; exercises are interactive for the student, answer tables for the teacher |
 | `/live` | Presentation / follow mode |
 | `/homework` | Homework files with done state |
+| `/account` | Lessons paid / completed / left, history, bank details with a copy button (from `BANK_DETAILS`). Teacher adds and marks off; student reads |
 | `/teach/results` | Every exercise the student touched |
 | `/reference/*` | Grammar guide, recommendations, things to watch, things to read |
 

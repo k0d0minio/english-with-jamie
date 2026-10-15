@@ -15,6 +15,13 @@
       "when": 1792069206617,
       "tag": "0001_content_keys",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1792083069460,
+      "tag": "0002_lesson_ledger",
+      "breakpoints": true
     }
   ]
 }

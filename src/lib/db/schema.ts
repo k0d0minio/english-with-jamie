@@ -17,6 +17,7 @@ export type { BlockData, ClozeItem, ExerciseData, ExerciseItem, MatchItem, McIte
 export const lessonStatus = pgEnum("lesson_status", ["draft", "scheduled", "done"]);
 export const blockKind = pgEnum("block_kind", ["slide", "exercise"]);
 export const liveMode = pgEnum("live_mode", ["follow", "free"]);
+export const ledgerKind = pgEnum("ledger_kind", ["paid", "taught"]);
 
 // ---------------------------------------------------------------------------
 // Live tables: what the app reads and writes. Content itself lives in content/*.md.
@@ -42,6 +43,19 @@ export const itemAnswers = pgTable(
 export const homeworkDone = pgTable("homework_done", {
   slug: text("slug").primaryKey(),
   doneAt: timestamp("done_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+/**
+ * The student's lesson balance, kept by hand by the teacher. A "paid" row adds lessons once
+ * a payment has been verified; a "taught" row uses one up. Remaining = paid - taught.
+ */
+export const lessonLedger = pgTable("lesson_ledger", {
+  id: serial("id").primaryKey(),
+  kind: ledgerKind("kind").notNull(),
+  lessons: integer("lessons").notNull(),
+  date: date("date").notNull(),
+  note: text("note").notNull().default(""),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });
 
 /** Single-row table: what the teacher is currently showing. */
@@ -116,3 +130,4 @@ export const homework = pgTable("homework", {
 
 export type ItemAnswer = typeof itemAnswers.$inferSelect;
 export type LiveState = typeof liveState.$inferSelect;
+export type LedgerEntry = typeof lessonLedger.$inferSelect;
