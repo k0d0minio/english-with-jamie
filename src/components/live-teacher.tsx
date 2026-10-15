@@ -10,27 +10,28 @@ import { Button } from "@/components/ui/button";
 import { Select } from "@/components/ui/fields";
 import { Badge, Card } from "@/components/ui/card";
 import type { LiveSnapshot } from "@/lib/live";
-import type { Answer } from "@/lib/db/schema";
+import type { ItemAnswer } from "@/lib/db/schema";
 import { cn, formatDate } from "@/lib/utils";
 
-type LessonOption = { id: number; title: string; status: string; scheduledFor: string | null };
+type LessonOption = { slug: string; title: string; status: string; date: string | null };
 
 export function LiveTeacher({ initial, lessons }: { initial: LiveSnapshot; lessons: LessonOption[] }) {
   const { snap, refresh } = useLive(initial, 2000);
   const [pending, start] = useTransition();
-  const [answerSet, setAnswerSet] = useState<{ blockId: number; rows: Answer[] } | null>(null);
+  const [answerSet, setAnswerSet] = useState<{ blockKey: string; rows: ItemAnswer[] } | null>(null);
   const [showExercise, setShowExercise] = useState(false);
   const block = snap.block;
 
   // Poll the student's answers for the current exercise.
-  const answers = answerSet && block && answerSet.blockId === block.id ? answerSet.rows : [];
+  const answers = answerSet && block && answerSet.blockKey === block.key ? answerSet.rows : [];
   useEffect(() => {
     if (!block || block.data.kind !== "exercise") return;
     let alive = true;
-    const blockId = block.id;
+    const blockKey = block.key;
+    const lessonSlug = snap.lesson?.slug ?? "";
     const load = async () => {
-      const res = await fetch(`/api/live/answers?blockId=${blockId}`, { cache: "no-store" });
-      if (res.ok && alive) setAnswerSet({ blockId, rows: (await res.json()).answers ?? [] });
+      const res = await fetch(`/api/live/answers?lesson=${encodeURIComponent(lessonSlug)}&block=${encodeURIComponent(blockKey)}`, { cache: "no-store" });
+      if (res.ok && alive) setAnswerSet({ blockKey, rows: (await res.json()).answers ?? [] });
     };
     load();
     const id = setInterval(load, 2000);
@@ -38,7 +39,7 @@ export function LiveTeacher({ initial, lessons }: { initial: LiveSnapshot; lesso
       alive = false;
       clearInterval(id);
     };
-  }, [block]);
+  }, [block, snap.lesson?.slug]);
 
   const act = (fn: () => Promise<void>) => start(async () => { await fn(); await refresh(); });
   const go = (i: number) => act(() => gotoBlock(i));
@@ -60,18 +61,18 @@ export function LiveTeacher({ initial, lessons }: { initial: LiveSnapshot; lesso
         <Card>
           <h2 className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted">Lesson</h2>
           <Select
-            value={snap.lesson?.id ?? ""}
+            value={snap.lesson?.slug ?? ""}
             disabled={pending}
             onChange={(e) => {
-              const id = Number(e.target.value);
-              if (id) act(() => startLive(id));
+              const slug = e.target.value;
+              if (slug) act(() => startLive(slug));
             }}
           >
             <option value="">— choose a lesson —</option>
             {lessons.map((l) => (
-              <option key={l.id} value={l.id}>
+              <option key={l.slug} value={l.slug}>
                 {l.title}
-                {l.scheduledFor ? ` · ${formatDate(l.scheduledFor)}` : ""}
+                {l.date ? ` · ${formatDate(l.date)}` : ""}
                 {l.status === "draft" ? " (draft)" : ""}
               </option>
             ))}
@@ -99,7 +100,7 @@ export function LiveTeacher({ initial, lessons }: { initial: LiveSnapshot; lesso
           <Card className="p-2">
             <ol className="space-y-0.5">
               {snap.blocks.map((b, i) => (
-                <li key={b.id}>
+                <li key={b.key}>
                   <button
                     type="button"
                     disabled={pending}
@@ -147,7 +148,7 @@ export function LiveTeacher({ initial, lessons }: { initial: LiveSnapshot; lesso
                       {showExercise ? "Show answers" : "Show as student sees it"}
                     </Button>
                   </div>
-                  {showExercise ? <Exercise key={block.id} blockId={block.id} data={block.data} readOnly /> : <AnswersTable data={block.data} answers={answers} />}
+                  {showExercise ? <Exercise key={block.key} lessonSlug={snap.lesson.slug} blockKey={block.key} data={block.data} readOnly /> : <AnswersTable data={block.data} answers={answers} />}
                 </>
               )}
             </div>

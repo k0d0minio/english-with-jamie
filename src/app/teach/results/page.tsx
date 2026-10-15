@@ -27,17 +27,17 @@ export default async function ResultsPage() {
               {rows.map((r) => {
                 const items = r.block && r.block.data.kind === "exercise" ? r.block.data.items.length : r.total;
                 return (
-                  <tr key={r.blockId} className="border-t border-line">
+                  <tr key={`${r.lessonSlug}/${r.blockKey}`} className="border-t border-line">
                     <td className="px-4 py-2">
                       {r.lesson ? (
-                        <Link href={`/lessons/${r.lessonId}`} className="text-accent hover:underline">
+                        <Link href={`/lessons/${r.lessonSlug}`} className="text-accent hover:underline">
                           {r.lesson.title}
                         </Link>
                       ) : (
-                        "—"
+                        <span className="text-muted">{r.lessonSlug} (file missing)</span>
                       )}
                     </td>
-                    <td className="px-4 py-2">{r.block?.data.title ?? "(deleted)"}</td>
+                    <td className="px-4 py-2">{r.block?.data.title ?? r.blockKey}</td>
                     <td className="px-4 py-2 font-medium">
                       {r.correct}/{items}
                     </td>

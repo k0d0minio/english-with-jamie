@@ -1,19 +1,21 @@
 import Link from "next/link";
 import { BookOpen, Compass, Film, Newspaper } from "lucide-react";
 import { requireRole } from "@/lib/auth";
+import { listGrammar, listRead, listRecommendations, listWatch } from "@/lib/content";
 import { Card, PageHeader } from "@/components/ui/card";
-import { grammarTopics } from "@/content/grammar";
-import { recommendations } from "@/content/recommendations";
-import { watchList } from "@/content/watch";
-import { readList } from "@/content/read";
+
+export const dynamic = "force-dynamic";
 
 export default async function ReferencePage() {
-  await requireRole();
+  const role = await requireRole();
+  const student = role === "student";
+  const [grammar, recs, watch, read] = await Promise.all([listGrammar(), listRecommendations(), listWatch(), listRead()]);
+  const count = <T extends { draft: boolean }>(xs: T[]) => xs.filter((x) => !student || !x.draft).length;
   const sections = [
-    { href: "/reference/grammar", icon: BookOpen, title: "Grammar & syntax guide", desc: `${grammarTopics.length} topics, B2 and up. Examples first, rules second.` },
-    { href: "/reference/recommendations", icon: Compass, title: "How to improve", desc: `${recommendations.length} pieces of advice from Jamie.` },
-    { href: "/reference/watch", icon: Film, title: "Things to watch", desc: `${watchList.length} series and films.` },
-    { href: "/reference/read", icon: Newspaper, title: "Things to read", desc: `${readList.length} articles and books.` },
+    { href: "/reference/grammar", icon: BookOpen, title: "Grammar & syntax guide", desc: `${count(grammar)} topics, B2 and up. Examples first, rules second.` },
+    { href: "/reference/recommendations", icon: Compass, title: "How to improve", desc: `${count(recs)} pieces of advice from Jamie.` },
+    { href: "/reference/watch", icon: Film, title: "Things to watch", desc: `${count(watch)} series and films.` },
+    { href: "/reference/read", icon: Newspaper, title: "Things to read", desc: `${count(read)} articles and books.` },
   ];
   return (
     <>

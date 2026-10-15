@@ -1,26 +1,32 @@
-# english-with-jamie — context
+# english-with-jamie — Layer 1: where do I go?
 
-A small Next.js web app used as a shared tool for teaching English online, one to one.
+A small Next.js app used as a shared tool for teaching English online, one to one, plus
+the ICM studios that produce everything the app shows.
 
 ## How it is used
 
-- The teacher (Jamie) has the app open on his machine; the student has it open on theirs.
+- The teacher (Jamie) has the app open on his machine; the student has it open on hers.
 - Whatever the teacher drives (current lesson, slide, exercise) the student's screen follows.
-- Built for a single student today. Multi-student support comes later; keep the data model
-  simple but don't paint it into a corner.
+- Content is **not** written in the app. It is written as markdown in `content/`, in a
+  Claude session, through a studio. The app renders it.
+- Built for a single student today. Multi-student support comes later; keep the data
+  model simple but don't paint it into a corner.
 
-## The learner (kept deliberately non-identifying — this repo is public)
+## The map
 
-- Teenager, secondary school, strong academic record, tested at CEFR B2.
-- Preparing for a six-month school exchange in an English-speaking country, living with a
-  host family and attending a local school.
-- Confident on paper, less so out loud. The lessons exist to build spoken confidence.
+| Layer | Where | Answers |
+|---|---|---|
+| 0 | [`AGENTS.md`](AGENTS.md) | Where am I? |
+| 1 | this file · [`studios/CONTEXT.md`](studios/CONTEXT.md) | Where do I go? |
+| 2 | `studios/<studio>/CONTEXT.md` | What do I do? |
+| 3 | [`studios/_shared/`](studios/_shared/) | What rules apply? (learner, voice, syllabus, formats) |
+| 4 | `studios/<studio>/intake/` · [`content/`](content/) | What am I working with, and what did I make? |
 
 ## What the lessons are for
 
 1. Conversation first: the everyday situations she will have to handle on arrival —
    introductions, host family, school admin, classes, friends, shops, transport, health.
-2. Practical English over exam English: idiom, register, listening to natural speed.
+2. Practical English over exam English: idiom, register, listening at natural speed.
 3. Things to watch, read and listen to, chosen with her, not for her. Recommendations in
    this app come from the teacher, never generated.
 4. Light accountability: homework and visible progress, shared with the teacher rather

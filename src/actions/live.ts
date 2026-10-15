@@ -14,14 +14,14 @@ async function bump(patch: Partial<typeof schema.liveState.$inferInsert>) {
   revalidatePath("/live");
 }
 
-export async function startLive(lessonId: number) {
+export async function startLive(lessonSlug: string) {
   await requireRole("teacher");
-  await bump({ lessonId, blockIndex: 0, mode: "follow" });
+  await bump({ lessonSlug, blockIndex: 0, mode: "follow" });
 }
 
 export async function stopLive() {
   await requireRole("teacher");
-  await bump({ lessonId: null, blockIndex: 0 });
+  await bump({ lessonSlug: null, blockIndex: 0 });
 }
 
 export async function gotoBlock(index: number) {

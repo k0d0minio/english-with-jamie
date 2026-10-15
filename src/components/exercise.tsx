@@ -4,20 +4,22 @@ import { Check, Lightbulb, X } from "lucide-react";
 import { submitAnswer } from "@/actions/answers";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/fields";
-import type { ExerciseData } from "@/lib/db/schema";
+import type { ExerciseData } from "@/lib/lesson-types";
 import { cn } from "@/lib/utils";
 
 export type SavedAnswer = { response: string; correct: boolean; attempts: number };
 type ItemState = { response: string; status: "idle" | "correct" | "wrong"; attempts: number; reveal?: string; hint?: boolean };
 
 export function Exercise({
-  blockId,
+  lessonSlug,
+  blockKey,
   data,
   saved = {},
   readOnly = false,
   big = false,
 }: {
-  blockId: number;
+  lessonSlug: string;
+  blockKey: string;
   data: ExerciseData;
   saved?: Record<number, SavedAnswer>;
   readOnly?: boolean;
@@ -37,7 +39,7 @@ export function Exercise({
     const current = state[i];
     if (!current.response.trim()) return;
     start(async () => {
-      const r = await submitAnswer(blockId, i, current.response);
+      const r = await submitAnswer(lessonSlug, blockKey, i, current.response);
       setState((s) => ({ ...s, [i]: { ...s[i], status: r.correct ? "correct" : "wrong", attempts: r.attempts, reveal: r.reveal } }));
     });
   }
@@ -117,7 +119,7 @@ export function Exercise({
                               onClick={() => {
                                 setState((s) => ({ ...s, [i]: { ...s[i], response: String(k) } }));
                                 start(async () => {
-                                  const r = await submitAnswer(blockId, i, String(k));
+                                  const r = await submitAnswer(lessonSlug, blockKey, i, String(k));
                                   setState((s) => ({ ...s, [i]: { ...s[i], response: String(k), status: r.correct ? "correct" : "wrong", attempts: r.attempts, reveal: r.reveal } }));
                                 });
                               }}

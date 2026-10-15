@@ -10,10 +10,57 @@ import {
   timestamp,
   uniqueIndex,
 } from "drizzle-orm/pg-core";
+import type { BlockData } from "@/lib/lesson-types";
+
+export type { BlockData, ClozeItem, ExerciseData, ExerciseItem, McItem, SlideData } from "@/lib/lesson-types";
 
 export const lessonStatus = pgEnum("lesson_status", ["draft", "scheduled", "done"]);
 export const blockKind = pgEnum("block_kind", ["slide", "exercise"]);
 export const liveMode = pgEnum("live_mode", ["follow", "free"]);
+
+// ---------------------------------------------------------------------------
+// Live tables: what the app reads and writes. Content itself lives in content/*.md.
+// ---------------------------------------------------------------------------
+
+/** The student's latest answer per exercise item, keyed by lesson file and block key. */
+export const itemAnswers = pgTable(
+  "item_answers",
+  {
+    id: serial("id").primaryKey(),
+    lessonSlug: text("lesson_slug").notNull(),
+    blockKey: text("block_key").notNull(),
+    itemIndex: integer("item_index").notNull(),
+    response: text("response").notNull(),
+    correct: boolean("correct").notNull(),
+    attempts: integer("attempts").notNull().default(1),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [uniqueIndex("item_answers_key_idx").on(t.lessonSlug, t.blockKey, t.itemIndex)],
+);
+
+/** Homework ticked off by the student; the task itself is content/homework/<slug>.md. */
+export const homeworkDone = pgTable("homework_done", {
+  slug: text("slug").primaryKey(),
+  doneAt: timestamp("done_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+/** Single-row table: what the teacher is currently showing. */
+export const liveState = pgTable("live_state", {
+  id: integer("id").primaryKey(),
+  lessonId: integer("lesson_id").references(() => lessons.id, { onDelete: "set null" }), // legacy, unused
+  lessonSlug: text("lesson_slug"),
+  blockIndex: integer("block_index").notNull().default(0),
+  mode: liveMode("mode").notNull().default("follow"),
+  version: integer("version").notNull().default(0),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+// ---------------------------------------------------------------------------
+// Legacy tables from the first cut (in-app lesson editor). Unused since content moved
+// to markdown; kept so no migration drops anything. Drop them by hand when convenient:
+//   drop table answers, blocks, homework, lessons; alter table live_state drop column lesson_id;
+// then delete this section and run `npm run db:generate`.
+// ---------------------------------------------------------------------------
 
 export const lessons = pgTable("lessons", {
   id: serial("id").primaryKey(),
@@ -67,39 +114,5 @@ export const homework = pgTable("homework", {
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });
 
-// Single-row table: what the teacher is currently showing.
-export const liveState = pgTable("live_state", {
-  id: integer("id").primaryKey(),
-  lessonId: integer("lesson_id").references(() => lessons.id, { onDelete: "set null" }),
-  blockIndex: integer("block_index").notNull().default(0),
-  mode: liveMode("mode").notNull().default("follow"),
-  version: integer("version").notNull().default(0),
-  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
-});
-
-// ---- Block payloads -------------------------------------------------------
-
-export type SlideData = {
-  kind: "slide";
-  title: string;
-  body: string; // markdown
-};
-
-export type ClozeItem = { kind: "cloze"; prompt: string; answer: string; hint?: string };
-export type McItem = { kind: "mc"; prompt: string; options: string[]; correct: number };
-export type ExerciseItem = ClozeItem | McItem;
-
-export type ExerciseData = {
-  kind: "exercise";
-  title: string;
-  instructions?: string;
-  items: ExerciseItem[];
-};
-
-export type BlockData = SlideData | ExerciseData;
-
-export type Lesson = typeof lessons.$inferSelect;
-export type Block = typeof blocks.$inferSelect;
-export type Answer = typeof answers.$inferSelect;
-export type Homework = typeof homework.$inferSelect;
+export type ItemAnswer = typeof itemAnswers.$inferSelect;
 export type LiveState = typeof liveState.$inferSelect;

@@ -1,5 +1,5 @@
 import { Markdown } from "@/components/markdown";
-import type { SlideData } from "@/lib/db/schema";
+import type { SlideData } from "@/lib/lesson-types";
 import { cn } from "@/lib/utils";
 
 export function SlideView({ data, big = false }: { data: SlideData; big?: boolean }) {

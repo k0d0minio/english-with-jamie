@@ -5,8 +5,10 @@ export const dynamic = "force-dynamic";
 
 export async function GET(req: Request) {
   if ((await getRole()) !== "teacher") return Response.json({ error: "forbidden" }, { status: 403 });
-  const blockId = Number(new URL(req.url).searchParams.get("blockId"));
-  if (!Number.isInteger(blockId)) return Response.json({ answers: [] });
-  const rows = await getAnswersForBlock(blockId);
+  const url = new URL(req.url);
+  const lesson = url.searchParams.get("lesson") ?? "";
+  const block = url.searchParams.get("block") ?? "";
+  if (!lesson || !block) return Response.json({ answers: [] });
+  const rows = await getAnswersForBlock(lesson, block);
   return Response.json({ answers: rows }, { headers: { "cache-control": "no-store" } });
 }

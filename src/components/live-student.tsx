@@ -47,7 +47,7 @@ export function LiveStudent({ initial }: { initial: LiveSnapshot }) {
 
       {block ? (
         <div className="min-h-[50vh] rounded-lg border border-line bg-card p-8 md:p-12">
-          {block.data.kind === "slide" ? <SlideView data={block.data} big /> : <Exercise key={block.id} blockId={block.id} data={block.data} big />}
+          {block.data.kind === "slide" ? <SlideView data={block.data} big /> : <Exercise key={block.key} lessonSlug={snap.lesson.slug} blockKey={block.key} data={block.data} big />}
         </div>
       ) : (
         <p className="text-muted">This lesson has no content yet.</p>

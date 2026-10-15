@@ -1,19 +1,20 @@
 import Link from "next/link";
 import { ArrowRight, Presentation } from "lucide-react";
 import { requireRole } from "@/lib/auth";
-import { getCurrentLesson, listHomework } from "@/lib/queries";
+import { currentLesson, listGrammar, listHomework } from "@/lib/content";
+import { homeworkDoneSet } from "@/lib/queries";
 import { getLiveSnapshot } from "@/lib/live";
 import { Badge, Card, Empty } from "@/components/ui/card";
 import { buttonClass } from "@/components/ui/button";
 import { formatDate } from "@/lib/utils";
-import { grammarTopics } from "@/content/grammar";
 
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
   const role = await requireRole();
-  const [lesson, homework, live] = await Promise.all([getCurrentLesson(), listHomework(), getLiveSnapshot()]);
-  const open = homework.filter((h) => !h.done).slice(0, 5);
+  const student = role === "student";
+  const [lesson, homework, done, live, grammar] = await Promise.all([currentLesson(student), listHomework(), homeworkDoneSet(), getLiveSnapshot(), listGrammar()]);
+  const open = homework.filter((h) => !done.has(h.slug) && (!student || !h.draft)).slice(0, 5);
 
   return (
     <div className="grid gap-6 lg:grid-cols-3">
@@ -33,29 +34,27 @@ export default async function Home() {
 
         <Card>
           <div className="mb-2 flex items-center justify-between">
-            <h2 className="text-xs font-semibold uppercase tracking-wide text-muted">{role === "teacher" ? "Up next" : "Your next lesson"}</h2>
-            {lesson?.scheduledFor ? <Badge tone="accent">{formatDate(lesson.scheduledFor)}</Badge> : null}
+            <h2 className="text-xs font-semibold uppercase tracking-wide text-muted">{student ? "Your next lesson" : "Up next"}</h2>
+            <span className="flex gap-2">
+              {!student && lesson?.status === "draft" ? <Badge>draft</Badge> : null}
+              {lesson?.date ? <Badge tone="accent">{formatDate(lesson.date)}</Badge> : null}
+            </span>
           </div>
           {lesson ? (
             <>
               <h3 className="text-2xl font-semibold tracking-tight">{lesson.title}</h3>
               {lesson.summary ? <p className="mt-2 text-muted">{lesson.summary}</p> : null}
               <div className="mt-4 flex flex-wrap gap-2">
-                <Link href={`/lessons/${lesson.id}`} className={buttonClass({ variant: "outline", size: "sm" })}>
+                <Link href={`/lessons/${lesson.slug}`} className={buttonClass({ variant: "outline", size: "sm" })}>
                   Open lesson
                 </Link>
-                {role === "teacher" ? (
-                  <>
-                    <Link href={`/teach/lessons/${lesson.id}`} className={buttonClass({ variant: "ghost", size: "sm" })}>
-                      Edit
-                    </Link>
-                    <Link href={`/live?lesson=${lesson.id}`} className={buttonClass({ size: "sm" })}>
-                      <Presentation className="h-4 w-4" /> Present
-                    </Link>
-                  </>
+                {!student ? (
+                  <Link href={`/live?lesson=${lesson.slug}`} className={buttonClass({ size: "sm" })}>
+                    <Presentation className="h-4 w-4" /> Present
+                  </Link>
                 ) : null}
               </div>
-              {role === "teacher" && lesson.teacherNotes ? (
+              {!student && lesson.teacherNotes ? (
                 <div className="mt-4 rounded-md bg-warm-soft/60 p-3 text-sm">
                   <span className="font-semibold text-warm">Your notes · </span>
                   <span className="whitespace-pre-wrap">{lesson.teacherNotes}</span>
@@ -63,14 +62,7 @@ export default async function Home() {
               ) : null}
             </>
           ) : (
-            <Empty>
-              No lessons yet.{" "}
-              {role === "teacher" ? (
-                <Link href="/teach/lessons/new" className="text-accent underline">
-                  Plan the first one.
-                </Link>
-              ) : null}
-            </Empty>
+            <Empty>No lessons yet. {student ? "" : "Plan one in the lesson-plan studio."}</Empty>
           )}
         </Card>
 
@@ -84,9 +76,12 @@ export default async function Home() {
           {open.length ? (
             <ul className="divide-y divide-line">
               {open.map((h) => (
-                <li key={h.id} className="flex items-center justify-between py-2">
-                  <span>{h.title}</span>
-                  {h.dueDate ? <span className="text-xs text-muted">due {formatDate(h.dueDate)}</span> : null}
+                <li key={h.slug} className="flex items-center justify-between py-2">
+                  <span>
+                    {h.title}
+                    {h.draft ? <Badge className="ml-2">draft</Badge> : null}
+                  </span>
+                  {h.due ? <span className="text-xs text-muted">due {formatDate(h.due)}</span> : null}
                 </li>
               ))}
             </ul>
@@ -100,21 +95,25 @@ export default async function Home() {
         <Card>
           <h2 className="mb-3 text-xs font-semibold uppercase tracking-wide text-muted">Reference</h2>
           <ul className="space-y-1 text-sm">
-            <li><Link className="hover:text-accent" href="/reference/grammar">Grammar &amp; syntax guide <span className="text-muted">· {grammarTopics.length} topics</span></Link></li>
+            <li>
+              <Link className="hover:text-accent" href="/reference/grammar">
+                Grammar &amp; syntax guide <span className="text-muted">· {grammar.filter((g) => !student || !g.draft).length} topics</span>
+              </Link>
+            </li>
             <li><Link className="hover:text-accent" href="/reference/recommendations">How to improve</Link></li>
             <li><Link className="hover:text-accent" href="/reference/watch">Things to watch</Link></li>
             <li><Link className="hover:text-accent" href="/reference/read">Things to read</Link></li>
           </ul>
         </Card>
-        {role === "teacher" ? (
+        {!student ? (
           <Card>
             <h2 className="mb-3 text-xs font-semibold uppercase tracking-wide text-muted">Teacher</h2>
             <ul className="space-y-1 text-sm">
-              <li><Link className="hover:text-accent" href="/teach/lessons/new">New lesson plan</Link></li>
               <li><Link className="hover:text-accent" href="/lessons">All lessons</Link></li>
               <li><Link className="hover:text-accent" href="/teach/results">Exercise results</Link></li>
               <li><Link className="hover:text-accent" href="/live">Live controls</Link></li>
             </ul>
+            <p className="mt-3 text-xs text-muted">Content is written in the studios, not here. See AGENTS.md in the repo.</p>
           </Card>
         ) : null}
       </div>
