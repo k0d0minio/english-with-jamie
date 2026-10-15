@@ -99,7 +99,7 @@ export default async function Home() {
       </div>
 
       <div className="space-y-6">
-        <Link href="/account" className="block">
+        <Link href="/payments" className="block">
           <Card className="hover:border-accent/50">
             <h2 className="text-xs font-semibold uppercase tracking-wide text-muted">Lessons left</h2>
             <div className={balance.remaining <= 2 ? "mt-1 text-3xl font-semibold text-warm" : "mt-1 text-3xl font-semibold text-accent-strong"}>{balance.remaining}</div>

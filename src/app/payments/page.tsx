@@ -10,7 +10,7 @@ export const dynamic = "force-dynamic";
 
 const LOW = 2;
 
-export default async function AccountPage() {
+export default async function PaymentsPage() {
   const role = await requireRole();
   const teacher = role === "teacher";
   const [balance, ledger, lessons] = await Promise.all([lessonBalance(), getLedger(), teacher ? listLessons() : Promise.resolve([])]);
@@ -30,7 +30,7 @@ export default async function AccountPage() {
   return (
     <>
       <PageHeader
-        title={teacher ? "Student account" : "Your lessons"}
+        title={teacher ? "Lessons & payments" : "Your lessons"}
         lead={
           teacher
             ? "Kept by hand: add lessons once you've verified a payment, and mark each lesson off after you teach it. The student sees this page read-only."

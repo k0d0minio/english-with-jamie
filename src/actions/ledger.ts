@@ -18,7 +18,7 @@ const paidInput = z.object({
 const taughtInput = z.object({ date: day, note });
 
 function refresh() {
-  revalidatePath("/account");
+  revalidatePath("/payments");
   revalidatePath("/");
 }
 
