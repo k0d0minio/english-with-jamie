@@ -15,6 +15,7 @@
   --color-danger: #b91c1c;
   --color-ok: #15803d;
   --color-ok-soft: #dcf5e3;
+  --color-maple: #c8402b;
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
   --radius-lg: 0.9rem;
@@ -44,11 +45,137 @@ body {
   --tw-prose-td-borders: var(--color-line);
 }
 
-.slide .prose {
-  font-size: 1.35rem;
-  line-height: 1.6;
+/* ---- slide illustrations (src/components/slide-art.tsx) ------------------------ */
+
+:root {
+  --art-ink: #1f1d1a;
+  --art-paper: #fffdf8;
+  --art-teal: #0f766e;
+  --art-teal-deep: #0b5f59;
+  --art-teal-soft: #dff1ee;
+  --art-amber: #e08a1e;
+  --art-amber-soft: #fdebd3;
+  --art-maple: #c8402b;
+  --art-pink: #e7889a;
+  --art-stone: #eee3cc;
+  --art-stone-dark: #c9b48f;
+  --art-copper: #6fb3a3;
+  --art-leaf: #8cc0a6;
+  --art-pine: #1f5f55;
+  --art-water: #a9d6d1;
+  --art-ice: #edf6f9;
+  --art-sky: #cfe3ec;
+  --art-skin: #f0c7a2;
 }
-.slide .prose h1,
-.slide .prose h2 {
-  font-size: 2rem;
+
+.art g[class^="art-"] {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.art-fall { animation: art-fall 11s linear infinite; }
+.art-snow { animation: art-snow 8s linear infinite; }
+.art-sway { animation: art-sway 4.5s ease-in-out infinite; transform-origin: 50% 100% !important; }
+.art-sway-slow { animation: art-sway-slow 7s ease-in-out infinite; }
+.art-bob { animation: art-bob 4s ease-in-out infinite; }
+.art-drift { animation: art-drift 14s ease-in-out infinite; }
+.art-skate { animation: art-skate 9s linear infinite; }
+.art-flag { animation: art-flag 2.2s ease-in-out infinite; transform-origin: 0 50% !important; }
+.art-ripple { animation: art-ripple 4s ease-in-out infinite; }
+.art-spin { animation: art-spin 9s linear infinite; }
+.art-dot { animation: art-dot 1.4s ease-in-out infinite; }
+.art-twinkle { animation: art-twinkle 3s ease-in-out infinite; }
+
+@keyframes art-fall {
+  0% { transform: translate(0, 0) rotate(0deg); opacity: 0; }
+  10%, 85% { opacity: 1; }
+  100% { transform: translate(34px, 270px) rotate(300deg); opacity: 0; }
+}
+@keyframes art-snow {
+  0% { transform: translate(0, 0); }
+  50% { transform: translate(8px, 125px); }
+  100% { transform: translate(-4px, 255px); }
+}
+@keyframes art-sway { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
+@keyframes art-sway-slow { 0%, 100% { transform: rotate(-4deg) translateY(0); } 50% { transform: rotate(4deg) translateY(-6px); } }
+@keyframes art-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+@keyframes art-drift { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(60px); } }
+@keyframes art-skate { 0% { transform: translateX(-210px); } 100% { transform: translateX(210px); } }
+@keyframes art-flag { 0%, 100% { transform: skewY(0deg) scaleX(1); } 50% { transform: skewY(-7deg) scaleX(0.9); } }
+@keyframes art-ripple { 0%, 100% { transform: translateX(0); opacity: 0.3; } 50% { transform: translateX(-14px); opacity: 1; } }
+@keyframes art-spin { to { transform: rotate(360deg); } }
+@keyframes art-dot { 0%, 70%, 100% { transform: translateY(0); opacity: 0.35; } 35% { transform: translateY(-5px); opacity: 1; } }
+@keyframes art-twinkle { 0%, 100% { transform: scale(0.6); opacity: 0.35; } 50% { transform: scale(1); opacity: 1; } }
+
+/* ---- the stage: one look for every slide in every lesson (block-view.tsx) -------- */
+
+@keyframes stage-rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@keyframes stage-pop { 0% { transform: scale(0.96); } 60% { transform: scale(1.02); } 100% { transform: scale(1); } }
+
+.stage-rise > * { animation: stage-rise 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+.stage-rise > :nth-child(2) { animation-delay: 0.07s; }
+.stage-rise > :nth-child(3) { animation-delay: 0.14s; }
+.stage-rise > :nth-child(4) { animation-delay: 0.21s; }
+.pop-in { animation: stage-pop 0.35s ease-out; }
+
+.stage .prose { font-size: 1.3rem; line-height: 1.6; }
+.stage-compact .prose { font-size: 1rem; }
+.stage .prose :where(ul > li, ol > li)::marker { color: var(--color-accent); }
+.stage .prose table { font-size: 0.85em; }
+.stage .prose :where(thead th) { color: var(--color-accent-strong); }
+
+/* cover: deep teal, light text */
+.stage-cover .prose {
+  --tw-prose-body: #f3efe6;
+  --tw-prose-bold: #ffffff;
+  --tw-prose-bullets: var(--art-amber);
+}
+.stage-cover .prose :where(ul > li)::marker { color: var(--art-amber); }
+
+/* cards: each top-level bullet is a card; a bold opening is its headline */
+.stage-cards .prose > ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: 0.9rem;
+}
+.stage-cards .prose > ul > li {
+  margin: 0;
+  padding: 1rem 1.15rem;
+  border-radius: 1rem;
+  background: var(--color-card);
+  border: 1px solid var(--color-line);
+  box-shadow: 0 10px 28px -20px rgba(31, 29, 26, 0.35);
+  font-size: 0.8em;
+  line-height: 1.5;
+  animation: stage-rise 0.55s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+.stage-cards .prose > ul > li::marker { content: none; }
+.stage-cards .prose > ul > li > strong:first-child,
+.stage-cards .prose > ul > li > p:first-child > strong:first-child {
+  display: block;
+  margin-bottom: 0.2rem;
+  font-size: 1.2em;
+  line-height: 1.3;
+  color: var(--color-accent-strong);
+}
+.stage-cards .prose > ul > li:nth-child(2) { animation-delay: 0.08s; }
+.stage-cards .prose > ul > li:nth-child(3) { animation-delay: 0.16s; }
+.stage-cards .prose > ul > li:nth-child(4) { animation-delay: 0.24s; }
+.stage-cards .prose > ul > li:nth-child(5) { animation-delay: 0.32s; }
+.stage-cards .prose > ul > li:nth-child(6) { animation-delay: 0.4s; }
+.stage-cards .prose > ul > li:nth-child(n + 7) { animation-delay: 0.48s; }
+
+/* talk: the speaking task, warm and big */
+.stage-talk .prose { font-size: 1.45rem; }
+.stage-compact.stage-talk .prose { font-size: 1.05rem; }
+
+@media (prefers-reduced-motion: reduce) {
+  .art *,
+  .stage-rise > *,
+  .stage-cards .prose > ul > li,
+  .pop-in {
+    animation: none !important;
+  }
 }

@@ -2,7 +2,8 @@
 import { useState } from "react";
 import { ChevronLeft, ChevronRight, Radio } from "lucide-react";
 import { useLive } from "@/components/use-live";
-import { SlideView } from "@/components/block-view";
+import { ExerciseStage, SlideView } from "@/components/block-view";
+import { SlideArt } from "@/components/slide-art";
 import { Exercise } from "@/components/exercise";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/card";
@@ -34,20 +35,28 @@ export function LiveStudent({ initial }: { initial: LiveSnapshot }) {
   const block = snap.blocks[idx];
 
   return (
-    <div className="mx-auto max-w-4xl">
-      <div className="mb-6 flex flex-wrap items-center gap-3 text-sm text-muted">
+    <div className="mx-auto max-w-5xl">
+      <div className="mb-4 flex flex-wrap items-center gap-3 text-sm text-muted">
         <Badge tone="accent">Live</Badge>
-        <span className="font-medium text-ink">{snap.lesson.title}</span>
-        <span>
-          {idx + 1} / {snap.blocks.length}
-        </span>
         {snap.mode === "free" ? <Badge tone="warm">Explore freely</Badge> : null}
         {offline ? <span className="text-danger">Connection lost, retrying…</span> : null}
       </div>
 
       {block ? (
-        <div className="min-h-[50vh] rounded-lg border border-line bg-card p-8 md:p-12">
-          {block.data.kind === "slide" ? <SlideView data={block.data} big /> : <Exercise key={block.key} lessonSlug={snap.lesson.slug} blockKey={block.key} data={block.data} big />}
+        <div key={block.key}>
+          {block.data.kind === "slide" ? (
+            <SlideView data={block.data} lessonTitle={snap.lesson.title} progress={{ index: idx, total: snap.blocks.length }} />
+          ) : (
+            <ExerciseStage progress={{ index: idx, total: snap.blocks.length }}>
+              <Exercise
+                lessonSlug={snap.lesson.slug}
+                blockKey={block.key}
+                data={block.data}
+                big
+                aside={block.data.art ? <SlideArt name={block.data.art} className="w-36 md:w-44" /> : null}
+              />
+            </ExerciseStage>
+          )}
         </div>
       ) : (
         <p className="text-muted">This lesson has no content yet.</p>

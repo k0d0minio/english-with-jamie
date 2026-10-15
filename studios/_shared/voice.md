@@ -4,8 +4,9 @@ Written for one reader, who is sixteen-ish, sharp, and a little unsure of hersel
 
 - **Warm, direct, adult.** Talk to her the way a good older cousin would. No exclamation
   marks for enthusiasm, no "awesome", no emoji, no "let's learn!".
-- **Short.** A slide is a glance, not a page: a heading and three to six lines. A
-  reference page is under 600 words. A homework task fits in one paragraph.
+- **Short.** A slide is a glance, not a page: a heading and up to six bullets or cards,
+  each a sentence or two. A reference page is under 600 words. A homework task fits in
+  one paragraph.
 - **Examples before rules.** Show the sentence first; explain second; keep the
   grammar label last and optional.
 - **Real situations, real lines.** Prefer "What you could say at the dinner table on the

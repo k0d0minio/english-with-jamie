@@ -7,7 +7,7 @@ no spaces.
 
 ## Lesson — `content/lessons/<date>-<slug>.md`
 
-```markdown
+````markdown
 ---
 title: First evening with the host family
 date: 2026-10-20
@@ -16,10 +16,17 @@ summary: Introductions, the house, food, and the questions you will be asked.
 ---
 
 ## Teacher notes
-Only the teacher sees this section: aims, timing, what to listen for.
+Only the teacher sees this section: the aim, and what to listen for across the lesson.
 
 ## Slide: Welcome
+@art: maple
+@kicker: Lesson one
 A heading and a few lines of markdown. Tables, lists and bold all work.
+
+### Teacher
+- **Time:** 3 min.
+- **Say:** "…"
+- **Ask:** "…"
 
 ## Exercise: Could I…?
 Optional instructions, one short paragraph.
@@ -28,10 +35,43 @@ Optional instructions, one short paragraph.
 I ___ (not / eat) meat, but I love fish. => don't eat || present simple
 ? You want to use the shower. | Can I shower? | Could I take a shower? | I shower now. => 2
 ```
-```
+
+### Teacher
+- **How:** …
+````
 
 Sections are `## ` headings: `Teacher notes`, `Slide: <title>`, `Exercise: <title>`.
 Anything before the first `## ` is ignored. Order is presentation order.
+
+**Inside a slide or exercise section:**
+
+- **`@key: value` lines** come first, before the body. They set the look; all optional.
+  - `@layout:` one of `cover` · `split` · `cards` · `talk` · `plain`.
+    If it's left out, the first slide is `cover`, a slide with `@art` is `split`, anything
+    else is `plain`.
+  - `@art:` one illustration from the library below. Exercises get `quiz` by default.
+  - `@kicker:` the small label above the slide (default: the lesson title; `talk`
+    slides say "Your turn").
+- **`### Teacher`** starts the private part: everything after it, up to the next `## `,
+  is shown to the teacher beside that slide (live and on the lesson page) and never sent
+  to the student. Use bullets with bold labels: **Time**, **Say**, **Ask**, **Do**,
+  **Listen for**.
+
+**Layouts**, the same in every lesson:
+
+| Layout | Use it for | Body |
+|---|---|---|
+| `cover` | The first slide, what she'll be able to do | A line, then three bullets |
+| `split` | Telling a story or explaining, with a picture | Up to five bullets or short paragraphs |
+| `cards` | A set of facts, prompts or options | Bullets; each becomes a card, a bold opening is its headline |
+| `talk` | The speaking task at the end | Two short paragraphs |
+| `plain` | Tables and phrase lists that need the width | Anything |
+
+**Art library** (animated, in `src/components/slide-art.tsx`): `maple` (falling maple
+leaves), `parliament` (Parliament Hill and the river), `canal` (a skater on the frozen
+canal), `tulips` (tulips and a windmill), `lakes` (a loon on a lake at dusk), `chat`
+(two speech bubbles), `quiz` (question cards). A lesson that needs something new asks for
+a drawing to be added to the library; it is then there for every later lesson.
 
 **Exercise items**, one per line inside the fenced `items` block:
 

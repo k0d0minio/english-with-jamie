@@ -13,7 +13,7 @@ export const dynamic = "force-dynamic";
 export default async function Home() {
   const role = await requireRole();
   const student = role === "student";
-  const [lesson, homework, done, live, grammar] = await Promise.all([currentLesson(student), listHomework(), homeworkDoneSet(), getLiveSnapshot(), listGrammar()]);
+  const [lesson, homework, done, live, grammar] = await Promise.all([currentLesson(student), listHomework(), homeworkDoneSet(), getLiveSnapshot({ teacher: !student }), listGrammar()]);
   const open = homework.filter((h) => !done.has(h.slug) && (!student || !h.draft)).slice(0, 5);
 
   return (

@@ -14,7 +14,7 @@ export default async function LivePage({ searchParams }: { searchParams: Promise
     if (await getLesson(lesson)) await setLiveLesson(lesson);
     redirect("/live");
   }
-  const snap = await getLiveSnapshot();
+  const snap = await getLiveSnapshot({ teacher: role === "teacher" });
   if (role === "teacher") {
     const lessons = (await listLessons()).map((l) => ({ slug: l.slug, title: l.title, status: l.status, date: l.date }));
     return <LiveTeacher initial={snap} lessons={lessons} />;

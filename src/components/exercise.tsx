@@ -1,5 +1,5 @@
 "use client";
-import { useState, useTransition } from "react";
+import { useState, useTransition, type ReactNode } from "react";
 import { Check, Lightbulb, X } from "lucide-react";
 import { submitAnswer } from "@/actions/answers";
 import { Button } from "@/components/ui/button";
@@ -17,6 +17,7 @@ export function Exercise({
   saved = {},
   readOnly = false,
   big = false,
+  aside,
 }: {
   lessonSlug: string;
   blockKey: string;
@@ -24,6 +25,8 @@ export function Exercise({
   saved?: Record<number, SavedAnswer>;
   readOnly?: boolean;
   big?: boolean;
+  /** Shown beside the title, e.g. the quiz illustration on the live stage. */
+  aside?: ReactNode;
 }) {
   const [state, setState] = useState<Record<number, ItemState>>(() =>
     Object.fromEntries(
@@ -48,19 +51,24 @@ export function Exercise({
 
   return (
     <div className={cn(big && "text-lg")}>
-      <div className="mb-4 flex items-baseline justify-between gap-4">
-        <h2 className={cn("font-semibold tracking-tight", big ? "text-3xl" : "text-xl")}>{data.title}</h2>
-        <span className="text-sm text-muted">
-          {done}/{data.items.length}
-        </span>
+      <div className={cn("flex items-center gap-6", big ? "mb-8" : "mb-4")}>
+        <div className="min-w-0 flex-1">
+          <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2">
+            <h2 className={cn("font-semibold tracking-tight text-balance", big ? "text-4xl md:text-[2.75rem] leading-[1.05]" : "text-xl")}>{data.title}</h2>
+            <span className={cn("rounded-full px-2.5 py-0.5 text-sm font-semibold tabular-nums", done === data.items.length ? "bg-ok-soft text-ok" : "bg-line/70 text-muted")}>
+              {done}/{data.items.length}
+            </span>
+          </div>
+          {data.instructions ? <p className={cn("text-muted", big ? "mt-3 max-w-2xl" : "mt-2")}>{data.instructions}</p> : null}
+        </div>
+        {aside ? <div className="hidden shrink-0 sm:block">{aside}</div> : null}
       </div>
-      {data.instructions ? <p className="mb-4 text-muted">{data.instructions}</p> : null}
       <ol className="space-y-4">
         {data.items.map((item, i) => {
           const st = state[i];
           const tone = st.status === "correct" ? "border-ok/50 bg-ok-soft/40" : st.status === "wrong" ? "border-danger/40 bg-red-50/60" : "border-line bg-card";
           return (
-            <li key={i} className={cn("rounded-lg border p-4 transition-colors", tone)}>
+            <li key={i} className={cn("rounded-xl border p-4 transition-colors", big && "p-5", st.status === "correct" && "pop-in", tone)}>
               <div className="flex items-start gap-3">
                 <span className="mt-0.5 w-6 shrink-0 text-sm font-semibold text-muted">{i + 1}.</span>
                 <div className="flex-1 space-y-3">
@@ -125,6 +133,7 @@ export function Exercise({
                               }}
                               className={cn(
                                 "rounded-lg border px-3 py-2 text-left text-sm transition-colors",
+                                big && "px-4 py-3 text-base",
                                 chosen && st.status === "correct" && "border-ok bg-ok-soft",
                                 chosen && st.status === "wrong" && "border-danger bg-red-50",
                                 !chosen && "border-line bg-card hover:border-accent/60",

@@ -6,7 +6,7 @@ import { getLesson, type ContentBlock } from "@/lib/content";
 export type LiveSnapshot = {
   version: number;
   mode: "follow" | "free";
-  lesson: { slug: string; title: string } | null;
+  lesson: { slug: string; title: string; teacherNotes?: string } | null;
   blockIndex: number;
   total: number;
   block: ContentBlock | null;
@@ -17,22 +17,27 @@ export async function ensureLiveRow() {
   await db.insert(schema.liveState).values({ id: 1 }).onConflictDoNothing();
 }
 
-export async function getLiveSnapshot(): Promise<LiveSnapshot> {
+/**
+ * `teacher: false` strips everything private (lesson and per-slide teacher notes); the
+ * student's poll and page get that version.
+ */
+export async function getLiveSnapshot({ teacher }: { teacher: boolean }): Promise<LiveSnapshot> {
   await ensureLiveRow();
   const [state] = await db.select().from(schema.liveState).where(eq(schema.liveState.id, 1));
   const empty: LiveSnapshot = { version: state?.version ?? 0, mode: state?.mode ?? "follow", lesson: null, blockIndex: 0, total: 0, block: null, blocks: [] };
   if (!state?.lessonSlug) return empty;
   const lesson = await getLesson(state.lessonSlug);
   if (!lesson) return empty;
-  const idx = Math.min(Math.max(state.blockIndex, 0), Math.max(lesson.blocks.length - 1, 0));
+  const blocks: ContentBlock[] = teacher ? lesson.blocks : lesson.blocks.map((b) => ({ key: b.key, kind: b.kind, data: b.data }));
+  const idx = Math.min(Math.max(state.blockIndex, 0), Math.max(blocks.length - 1, 0));
   return {
     version: state.version,
     mode: state.mode,
-    lesson: { slug: lesson.slug, title: lesson.title },
+    lesson: teacher ? { slug: lesson.slug, title: lesson.title, teacherNotes: lesson.teacherNotes } : { slug: lesson.slug, title: lesson.title },
     blockIndex: idx,
-    total: lesson.blocks.length,
-    block: lesson.blocks[idx] ?? null,
-    blocks: lesson.blocks,
+    total: blocks.length,
+    block: blocks[idx] ?? null,
+    blocks,
   };
 }
 

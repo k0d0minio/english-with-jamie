@@ -22,10 +22,11 @@ Don't read the app source, other studios, or `content/` beyond the lines above.
 1. **Fix the theme and date.** From the brief if there is one; otherwise the next
    unticked row of the syllabus and the next lesson day Jamie names. If neither gives a
    date, ask once, then proceed with the date he gives.
-2. **Shape it.** Sixty minutes of conversation-led teaching: 5–7 slides, 2–3 exercises,
-   in presentation order. A slide is a glance: heading plus three to six lines. The
-   first slide says what she will be able to do by the end; the last slide is the
-   speaking task she does with Jamie, not an exercise.
+2. **Shape it.** Sixty minutes of conversation-led teaching: 6–9 slides, 2–3 exercises,
+   in presentation order. The first slide (`cover`) says what she will be able to do by
+   the end; the last slide (`talk`) is the speaking task she does with Jamie, not an
+   exercise. Give each slide a layout and, where it helps, art from the library in
+   `formats.md`; the same layouts and drawings across lessons are what make it one course.
 3. **Write the phrases first.** Each lesson ships at least ten lines she can actually
    say, grouped by moment ("at the door", "at the table"). Then the one grammar point
    the theme leans on, shown through those same phrases. Then one listening or
@@ -33,11 +34,14 @@ Don't read the app source, other studios, or `content/` beyond the lines above.
 4. **Write the exercises** in the items grammar: gap-fills on the lesson's phrases,
    multiple choice on register (which one sounds natural). Six to eight items each.
    Every answer must appear somewhere on a slide.
-5. **Write the teacher notes**: aims in one line, timing per slide, two prompts to get
-   her talking, one thing to listen for (the French-shaped error this theme invites).
+5. **Write the teacher notes.** Lesson level (`## Teacher notes`): the aim in one line
+   and the French-shaped errors this theme invites. Per slide and exercise
+   (`### Teacher`): the time, what Jamie says to open it, one or two questions to get
+   her talking, and anything to listen for or bring in. Jamie reads these live, so keep
+   each to a few bullets.
 6. **Save** as `content/lessons/<date>-<slug>.md` with `status: draft`, then read it
    back once against `formats.md`: frontmatter complete, every `## ` heading one of the
-   three kinds, every item line parses.
+   three kinds, every `@layout` and `@art` from the lists, every item line parses.
 
 ## Output
 
