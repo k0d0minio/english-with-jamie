@@ -1,0 +1,54 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@theme {
+  --color-paper: #faf7f0;
+  --color-card: #ffffff;
+  --color-ink: #1f1d1a;
+  --color-muted: #6f6a60;
+  --color-line: #e6dfd0;
+  --color-accent: #0f766e;
+  --color-accent-strong: #0b5f59;
+  --color-accent-soft: #dff1ee;
+  --color-warm: #b45309;
+  --color-warm-soft: #fdebd3;
+  --color-danger: #b91c1c;
+  --color-ok: #15803d;
+  --color-ok-soft: #dcf5e3;
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+  --radius-lg: 0.9rem;
+}
+
+html {
+  color-scheme: light;
+}
+
+body {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+.prose {
+  --tw-prose-body: var(--color-ink);
+  --tw-prose-headings: var(--color-ink);
+  --tw-prose-links: var(--color-accent-strong);
+  --tw-prose-bold: var(--color-ink);
+  --tw-prose-quotes: var(--color-muted);
+  --tw-prose-code: var(--color-warm);
+  --tw-prose-pre-bg: #f1ede4;
+  --tw-prose-pre-code: var(--color-ink);
+  --tw-prose-th-borders: var(--color-line);
+  --tw-prose-td-borders: var(--color-line);
+}
+
+.slide .prose {
+  font-size: 1.35rem;
+  line-height: 1.6;
+}
+.slide .prose h1,
+.slide .prose h2 {
+  font-size: 2rem;
+}
