@@ -1,29 +1,20 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { COOKIE_NAME, verifySession } from "@/lib/session";
+import { neonAuth } from "@/lib/neon-auth";
 
 const PUBLIC = ["/login", "/api/health"];
 
+// Signed-in check only (and session refresh). Roles are enforced where the data is read:
+// requireRole() in pages and server actions, getRole() in route handlers.
 export async function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
   if (PUBLIC.some((p) => pathname === p || pathname.startsWith(p + "/"))) {
     return NextResponse.next();
   }
-  const raw = req.cookies.get(COOKIE_NAME)?.value;
-  const role = raw ? await verifySession(raw) : null;
-  if (!role) {
-    if (pathname.startsWith("/api/")) {
-      return NextResponse.json({ error: "unauthenticated" }, { status: 401 });
-    }
-    const url = req.nextUrl.clone();
-    url.pathname = "/login";
-    url.searchParams.set("next", pathname);
-    return NextResponse.redirect(url);
+  const loginUrl = pathname === "/" ? "/login" : `/login?next=${encodeURIComponent(pathname)}`;
+  const res = await neonAuth().middleware({ loginUrl })(req);
+  if (pathname.startsWith("/api/") && res.status >= 300 && res.status < 400) {
+    return NextResponse.json({ error: "unauthenticated" }, { status: 401 });
   }
-  if (pathname.startsWith("/teach") && role !== "teacher") {
-    return NextResponse.redirect(new URL("/", req.url));
-  }
-  const res = NextResponse.next();
-  res.headers.set("x-role", role);
   return res;
 }
 
