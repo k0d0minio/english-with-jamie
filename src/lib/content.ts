@@ -2,37 +2,11 @@ import "server-only";
 import { promises as fs } from "node:fs";
 import path from "node:path";
 import { parseExerciseItems } from "@/lib/exercise-dsl";
+import { parseForm, type Form } from "@/lib/form-dsl";
+import { parseFrontmatter, slugify, type Frontmatter } from "@/lib/frontmatter";
 import { ART_NAMES, SLIDE_LAYOUTS, type ArtName, type BlockData, type SlideLayout } from "@/lib/lesson-types";
 
 const ROOT = path.join(process.cwd(), "content");
-
-// ---- frontmatter ------------------------------------------------------------
-
-export type Frontmatter = Record<string, string>;
-
-export function parseFrontmatter(src: string): { data: Frontmatter; body: string } {
-  const m = /^---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/.exec(src);
-  if (!m) return { data: {}, body: src };
-  const data: Frontmatter = {};
-  for (const line of m[1].split(/\r?\n/)) {
-    const i = line.indexOf(":");
-    if (i <= 0 || line.trimStart().startsWith("#")) continue;
-    const key = line.slice(0, i).trim();
-    let value = line.slice(i + 1).trim();
-    value = value.replace(/\s+#.*$/, "").replace(/^["'](.*)["']$/, "$1");
-    data[key] = value;
-  }
-  return { data, body: m[2].trim() };
-}
-
-export function slugify(s: string) {
-  return s
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "");
-}
 
 const isDraft = (d: Frontmatter) => d.draft === "true";
 
@@ -274,4 +248,15 @@ export async function listGrammar(): Promise<GrammarTopic[]> {
 
 export async function getGrammar(slug: string): Promise<GrammarTopic | null> {
   return (await listGrammar()).find((t) => t.slug === slug) ?? null;
+}
+
+// ---- forms ------------------------------------------------------------------
+
+export async function listForms(): Promise<Form[]> {
+  return (await readFolder("forms")).map(({ slug, data, body }) => parseForm(slug, data, body));
+}
+
+export async function getForm(slug: string): Promise<Form | null> {
+  const raw = await readOne("forms", slug);
+  return raw ? parseForm(raw.slug, raw.data, raw.body) : null;
 }

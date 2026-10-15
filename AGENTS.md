@@ -29,6 +29,7 @@ is one session that reads the contract and writes the files it names.
 | Suggest series or films | [`studios/watch/CONTEXT.md`](studios/watch/CONTEXT.md) |
 | Suggest articles or books | [`studios/read/CONTEXT.md`](studios/read/CONTEXT.md) |
 | Write or fix a grammar / syntax reference page | [`studios/reference/CONTEXT.md`](studios/reference/CONTEXT.md) |
+| Ask a student questions (a form on her profile) to plan from | [`studios/forms/CONTEXT.md`](studios/forms/CONTEXT.md) |
 | Change how the app looks or behaves | `src/` — stack notes in [`README.md`](README.md) |
 | Who the learner is, how we talk to her, what the course covers | [`studios/_shared/`](studios/_shared/) |
 
@@ -39,6 +40,9 @@ is one session that reads the contract and writes the files it names.
   keep names, family messages and assessments out of every file.
 - **Recommendations are Jamie's words.** The recommendations studio structures what Jamie
   wrote in its `intake/`; it never invents advice ([`OBJECTIVES.md`](OBJECTIVES.md)).
+- **Her answers stay out of git.** Form answers live in the database; `npm run forms:pull`
+  copies them to `studios/_private/` (gitignored) for a session to read. Never commit
+  them or quote them in `content/`.
 - **Gates are Jamie's.** A studio writes `status: draft` (lessons) or `draft: true` (lists).
   Only Jamie changes that; the agent never flips a gate.
 - **CI is the verdict.** No local build, lint, typecheck or dev server; push and read the

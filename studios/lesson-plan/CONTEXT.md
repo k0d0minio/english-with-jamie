@@ -14,11 +14,17 @@ revision of an existing file. One run writes one lesson file. Work from the repo
 | 4 | `intake/<date>.md` (if present) | Jamie's brief: theme, date, anything from the last lesson to pick up |
 | 4 | `content/lessons/` — filenames and frontmatter only | What has been taught; don't repeat a theme unless asked |
 | 4 | The previous lesson's body, if the brief says "follow on" | Continuity |
+| 4 | `studios/_private/forms/**/*.md` (local, gitignored) | What she told us in forms: interests, worries, situations she wants to handle. Refresh first with `npm run forms:pull` |
 
 Don't read the app source, other studios, or `content/` beyond the lines above.
 
 ## Process
 
+0. **Read her answers.** Run `npm run forms:pull` (needs `.env.local`; skip if there is
+   none and say so). Use what she wrote to choose the examples, stories, polls and talk
+   task: her shows, her animals, the situation she said she dreads. Never quote her
+   answers or name anything identifying in the lesson file; it is public. Mention in the
+   teacher notes which answers shaped the lesson.
 1. **Fix the theme and date.** From the brief if there is one; otherwise the next
    unticked row of the syllabus and the next lesson day Jamie names. If neither gives a
    date, ask once, then proceed with the date he gives.

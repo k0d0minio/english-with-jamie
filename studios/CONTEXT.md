@@ -26,6 +26,11 @@ the name the app uses.
 | [`watch/`](watch/CONTEXT.md) | `content/watch/<slug>.md` | `draft: true` → removed |
 | [`read/`](read/CONTEXT.md) | `content/read/<slug>.md` | `draft: true` → removed |
 | [`reference/`](reference/CONTEXT.md) | `content/reference/grammar/<slug>.md` | `draft: true` → removed |
+| [`forms/`](forms/CONTEXT.md) | `content/forms/<slug>.md` | `draft: true` → removed, then Jamie sends it in the app |
+
+The student's answers to forms are the one input that is not in git: they live in the
+database and are pulled to `_private/forms/` (gitignored) with `npm run forms:pull`.
+Studios that use them read them there and never copy her words into `content/`.
 
 ## Shared references (Layer 3)
 

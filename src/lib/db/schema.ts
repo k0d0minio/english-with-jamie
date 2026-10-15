@@ -5,12 +5,14 @@ import {
   jsonb,
   pgEnum,
   pgTable,
+  primaryKey,
   serial,
   text,
   timestamp,
   uniqueIndex,
 } from "drizzle-orm/pg-core";
 import type { BlockData } from "@/lib/lesson-types";
+import type { FormAnswers } from "@/lib/form-dsl";
 
 export type { BlockData, ClozeItem, ExerciseData, ExerciseItem, MatchItem, McItem, OrderItem, PollItem, SlideData } from "@/lib/lesson-types";
 
@@ -43,6 +45,24 @@ export const homeworkDone = pgTable("homework_done", {
   slug: text("slug").primaryKey(),
   doneAt: timestamp("done_at", { withTimezone: true }).notNull().defaultNow(),
 });
+
+/**
+ * A form sent to one student, and her answers. The row is created when the teacher sends
+ * the form; the questions themselves are content/forms/<slug>.md. `userId` is the Neon
+ * Auth user id.
+ */
+export const formResponses = pgTable(
+  "form_responses",
+  {
+    formSlug: text("form_slug").notNull(),
+    userId: text("user_id").notNull(),
+    answers: jsonb("answers").$type<FormAnswers>().notNull().default({}),
+    sentAt: timestamp("sent_at", { withTimezone: true }).notNull().defaultNow(),
+    savedAt: timestamp("saved_at", { withTimezone: true }),
+    submittedAt: timestamp("submitted_at", { withTimezone: true }),
+  },
+  (t) => [primaryKey({ columns: [t.formSlug, t.userId] })],
+);
 
 /** Single-row table: what the teacher is currently showing. */
 export const liveState = pgTable("live_state", {
@@ -116,3 +136,4 @@ export const homework = pgTable("homework", {
 
 export type ItemAnswer = typeof itemAnswers.$inferSelect;
 export type LiveState = typeof liveState.$inferSelect;
+export type FormResponse = typeof formResponses.$inferSelect;
