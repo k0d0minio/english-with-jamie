@@ -10,6 +10,7 @@ import { ExerciseStage, SlideView } from "@/components/block-view";
 import { Markdown } from "@/components/markdown";
 import { Exercise, type SavedAnswer } from "@/components/exercise";
 import { AnswersTable } from "@/components/answers-table";
+import { ResetAnswers } from "@/components/reset-answers";
 import { formatDate } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
@@ -29,9 +30,12 @@ export default async function LessonPage({ params }: { params: Promise<{ slug: s
         lead={lesson.summary || undefined}
         actions={
           role === "teacher" ? (
-            <Link href={`/live?lesson=${slug}`} className={buttonClass()}>
-              <Presentation className="h-4 w-4" /> Present
-            </Link>
+            <>
+              {answers.length ? <ResetAnswers lessonSlug={slug} label="Reset answers" count={answers.length} /> : null}
+              <Link href={`/live?lesson=${slug}`} className={buttonClass()}>
+                <Presentation className="h-4 w-4" /> Present
+              </Link>
+            </>
           ) : null
         }
       />
@@ -72,7 +76,10 @@ export default async function LessonPage({ params }: { params: Promise<{ slug: s
                 <ExerciseStage progress={progress} compact>
                   {teacher ? (
                     <>
-                      <h2 className="mb-3 text-xl font-semibold">{b.data.title}</h2>
+                      <div className="mb-3 flex items-center justify-between gap-4">
+                        <h2 className="text-xl font-semibold">{b.data.title}</h2>
+                        {mine.length ? <ResetAnswers lessonSlug={slug} blockKey={b.key} label="Reset" count={mine.length} /> : null}
+                      </div>
                       <AnswersTable data={b.data} answers={mine} />
                     </>
                   ) : (

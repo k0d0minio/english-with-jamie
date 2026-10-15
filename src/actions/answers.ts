@@ -1,5 +1,6 @@
 "use server";
-import { sql } from "drizzle-orm";
+import { revalidatePath } from "next/cache";
+import { and, eq, sql } from "drizzle-orm";
 import { db, schema } from "@/lib/db";
 import { requireRole } from "@/lib/auth";
 import { getLesson } from "@/lib/content";
@@ -40,4 +41,14 @@ export async function submitAnswer(lessonSlug: string, blockKey: string, itemInd
   const reveal =
     !correct && attempts >= REVEAL_AFTER ? (item.kind === "mc" ? item.options[item.correct] : item.answer.split("/")[0].trim()) : undefined;
   return { correct, attempts, reveal };
+}
+
+/** Teacher only: wipe the student's answers for a whole lesson, or for one exercise in it. */
+export async function resetAnswers(lessonSlug: string, blockKey?: string) {
+  await requireRole("teacher");
+  if (!/^[a-z0-9-]+$/.test(lessonSlug)) return;
+  const byLesson = eq(schema.itemAnswers.lessonSlug, lessonSlug);
+  await db.delete(schema.itemAnswers).where(blockKey ? and(byLesson, eq(schema.itemAnswers.blockKey, blockKey)) : byLesson);
+  revalidatePath(`/lessons/${lessonSlug}`);
+  revalidatePath("/teach/results");
 }
