@@ -95,6 +95,49 @@ answered: the story behind the answer, in a sentence. Lines starting with `#` ar
 The app keys each block by its kind and title (`exercise:could-i`), so renaming an
 exercise after the student has answered it orphans those answers. Rename before, not after.
 
+## Form — `content/forms/<slug>.md`
+
+Questions for a student. There is no draft flag: a form is invisible to students until the
+teacher sends it to one from the app. She answers on her profile; answers are stored in
+the database, never in the file.
+
+````markdown
+---
+title: Getting to know you
+summary: A few questions so the lessons are about things you care about.
+---
+Markdown before the first `## ` is the intro, shown at the top.
+
+## Teacher notes
+Only the teacher sees this: the purpose, and which lessons each section feeds.
+
+## Things you love
+An optional line of intro for the section.
+
+```questions
+long: What does a perfect free Saturday look like? || As much or as little as you like.
+many: Which of these would you like a lesson about? | Music | Animals | Something else…
+```
+````
+
+Sections are `## <title>`; each holds one fenced `questions` block, one question per line:
+
+| Kind | Line | Shows |
+|---|---|---|
+| Short answer | `text: prompt` | One-line box |
+| Long answer | `long: prompt` | Paragraph box |
+| Pick one | `one: prompt \| option \| option` | Radio buttons |
+| Pick any | `many: prompt \| option \| option` | Checkboxes |
+| Scale | `scale: prompt \| low label \| high label` | 1 to 5, labels at the ends |
+
+`|| help` at the end of any line is shown under the question. An option ending in `…`
+(*Something else…*) gets a text box beside it. Every question is optional. Lines starting
+with `#` are comments.
+
+Answers are keyed by section title and question wording, so rewording a question after
+it has been answered orphans that answer (the teacher still sees it, flagged). Reword
+before sending, not after.
+
 ## Homework — `content/homework/<date>-<slug>.md`
 
 ```markdown

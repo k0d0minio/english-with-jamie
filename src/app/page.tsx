@@ -1,8 +1,8 @@
 import Link from "next/link";
-import { ArrowRight, Presentation } from "lucide-react";
-import { requireRole } from "@/lib/auth";
-import { currentLesson, listGrammar, listHomework } from "@/lib/content";
-import { homeworkDoneSet, lessonBalance } from "@/lib/queries";
+import { ArrowRight, ClipboardList, Presentation } from "lucide-react";
+import { getUser, requireRole } from "@/lib/auth";
+import { currentLesson, listForms, listGrammar, listHomework } from "@/lib/content";
+import { formResponsesForUser, homeworkDoneSet, lessonBalance, recentlySubmittedForms } from "@/lib/queries";
 import { getLiveSnapshot } from "@/lib/live";
 import { Badge, Card, Empty } from "@/components/ui/card";
 import { buttonClass } from "@/components/ui/button";
@@ -22,6 +22,11 @@ export default async function Home() {
     lessonBalance(),
   ]);
   const open = homework.filter((h) => !done.has(h.slug) && (!student || !h.draft)).slice(0, 5);
+  const user = (await getUser())!;
+  // Student: forms still to send back. Teacher: forms sent back in the last fortnight.
+  const [responses, forms] = await Promise.all([student ? formResponsesForUser(user.id) : recentlySubmittedForms(), listForms()]);
+  const formSlugs = new Set(forms.map((f) => f.slug));
+  const formsWaiting = responses.filter((r) => formSlugs.has(r.formSlug) && (!student || !r.submittedAt)).length;
 
   return (
     <div className="grid gap-6 lg:grid-cols-3">
@@ -36,6 +41,23 @@ export default async function Home() {
               </span>
             </span>
             <ArrowRight className="h-5 w-5" />
+          </Link>
+        ) : null}
+
+        {formsWaiting ? (
+          <Link
+            href={student ? "/profile" : "/teach/forms"}
+            className="flex items-center justify-between rounded-lg border border-warm/40 bg-warm-soft/60 px-5 py-4 hover:bg-warm-soft"
+          >
+            <span className="flex items-center gap-3">
+              <ClipboardList className="h-5 w-5 text-warm" />
+              <span className="font-medium">
+                {student
+                  ? `Jamie has ${formsWaiting === 1 ? "a question form" : `${formsWaiting} question forms`} for you`
+                  : `${formsWaiting} ${formsWaiting === 1 ? "form" : "forms"} sent back recently`}
+              </span>
+            </span>
+            <ArrowRight className="h-5 w-5 text-warm" />
           </Link>
         ) : null}
 
@@ -127,6 +149,7 @@ export default async function Home() {
             <ul className="space-y-1 text-sm">
               <li><Link className="hover:text-accent" href="/lessons">All lessons</Link></li>
               <li><Link className="hover:text-accent" href="/teach/results">Exercise results</Link></li>
+              <li><Link className="hover:text-accent" href="/teach/forms">Forms</Link></li>
               <li><Link className="hover:text-accent" href="/live">Live controls</Link></li>
             </ul>
             <p className="mt-3 text-xs text-muted">Content is written in the studios, not here. See AGENTS.md in the repo.</p>

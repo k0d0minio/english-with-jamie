@@ -30,8 +30,9 @@ Formats the app parses: [`studios/_shared/formats.md`](studios/_shared/formats.m
 - **Realtime:** the teacher writes a single `live_state` row; the student's page polls
   `/api/live` every 1.5 s.
 - **Database holds only state, never content:** the student's answers (`item_answers`),
-  homework ticked off (`homework_done`), what is live (`live_state`), and the lesson
-  balance the teacher keeps by hand (`lesson_ledger`: lessons paid, lessons taught). The tables from
+  homework ticked off (`homework_done`), forms sent and their answers (`form_responses`,
+  keyed by Neon Auth user id), what is live (`live_state`), and the lesson balance the
+  teacher keeps by hand (`lesson_ledger`: lessons paid, lessons taught). The tables from
   the first cut's in-app editor (`lessons`, `blocks`, `answers`, `homework`) are unused
   and documented for removal in `src/lib/db/schema.ts`.
 
@@ -44,6 +45,8 @@ Formats the app parses: [`studios/_shared/formats.md`](studios/_shared/formats.m
 | `/payments` | Lessons paid / completed / left, history, bank details with a copy button (from `BANK_DETAILS`). Teacher adds and marks off; student reads |
 | `/teach/results` | Every exercise the student touched |
 | `/teach/accounts` | Teacher: list accounts, create a new student or teacher |
+| `/teach/forms`, `/teach/forms/<slug>` | Teacher: forms, preview, send to a student, read answers |
+| `/profile`, `/profile/forms/<slug>` | Student: forms sent to her; fill in, save, send back |
 | `/reference/*` | Grammar guide, recommendations, things to watch, things to read |
 
 ## Running locally
@@ -56,6 +59,14 @@ npm run dev
 ```
 
 Secrets live in Vercel env vars and `.env.local` only. See `.env.example` for the keys.
+
+## Form answers for studio sessions
+
+```bash
+npm run forms:pull   # writes studios/_private/forms/<form>/<student>.md (gitignored)
+```
+
+Read-only. Needs `DATABASE_URL` in `.env.local`. The lesson-plan studio reads the output.
 
 ## Database changes
 

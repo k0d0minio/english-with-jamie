@@ -47,3 +47,6 @@ next-env.d.ts
 
 # truncated draft left outside the repo; the real page belongs in content/reference/grammar/
 src/content/grammar/articles.md
+
+# students' own answers, pulled for studio sessions (npm run forms:pull); never commit
+/studios/_private/

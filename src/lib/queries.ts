@@ -2,6 +2,8 @@ import "server-only";
 import { and, asc, desc, eq, sql } from "drizzle-orm";
 import { db, schema } from "@/lib/db";
 import { listLessons } from "@/lib/content";
+import { roleOf } from "@/lib/auth";
+import { neonAuth } from "@/lib/neon-auth";
 
 export async function getAnswersForLesson(lessonSlug: string) {
   return db.select().from(schema.itemAnswers).where(eq(schema.itemAnswers.lessonSlug, lessonSlug));
@@ -61,4 +63,36 @@ export async function lessonBalance() {
 export function bankDetails(): string | null {
   const raw = process.env.BANK_DETAILS?.replace(/\\n/g, "\n").trim();
   return raw || null;
+}
+
+// ---- forms ------------------------------------------------------------------
+
+export async function formResponsesForUser(userId: string) {
+  return db.select().from(schema.formResponses).where(eq(schema.formResponses.userId, userId)).orderBy(desc(schema.formResponses.sentAt));
+}
+
+export async function getFormResponse(formSlug: string, userId: string) {
+  const [row] = await db
+    .select()
+    .from(schema.formResponses)
+    .where(and(eq(schema.formResponses.formSlug, formSlug), eq(schema.formResponses.userId, userId)));
+  return row ?? null;
+}
+
+/** Forms students have sent back in the last `days` days, for the teacher's dashboard. */
+export async function recentlySubmittedForms(days = 14) {
+  return db
+    .select()
+    .from(schema.formResponses)
+    .where(sql`${schema.formResponses.submittedAt} > now() - make_interval(days => ${days})`);
+}
+
+export async function allFormResponses() {
+  return db.select().from(schema.formResponses).orderBy(desc(schema.formResponses.sentAt));
+}
+
+/** Teacher only (Neon Auth admin API): every account with the student role. */
+export async function listStudents(): Promise<{ id: string; name: string; email: string }[]> {
+  const { data } = await neonAuth().admin.listUsers({ query: { limit: 100, sortBy: "createdAt", sortDirection: "asc" } });
+  return (data?.users ?? []).filter((u) => roleOf(u) === "student").map((u) => ({ id: u.id, name: u.name, email: u.email }));
 }
