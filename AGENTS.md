@@ -44,7 +44,8 @@ is one session that reads the contract and writes the files it names.
   copies them to `studios/_private/` (gitignored) for a session to read. Never commit
   them or quote them in `content/`.
 - **Gates are Jamie's.** A studio writes `status: draft` (lessons) or `draft: true` (lists).
-  Only Jamie changes that; the agent never flips a gate.
+  Only Jamie changes that; the agent never flips a gate. Forms have no draft flag: Jamie
+  sending one from the app is their gate, and the agent never sends one.
 - **CI is the verdict.** No local build, lint, typecheck or dev server; push and read the
   PR checks and the Vercel preview.
 - **Secrets stay in Vercel and `.env.local`.** Never in a committed file.

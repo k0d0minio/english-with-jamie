@@ -97,14 +97,14 @@ exercise after the student has answered it orphans those answers. Rename before,
 
 ## Form — `content/forms/<slug>.md`
 
-Questions for a student. She answers on her profile; answers are stored in the database,
-never in the file.
+Questions for a student. There is no draft flag: a form is invisible to students until the
+teacher sends it to one from the app. She answers on her profile; answers are stored in
+the database, never in the file.
 
 ````markdown
 ---
 title: Getting to know you
 summary: A few questions so the lessons are about things you care about.
-draft: true              # remove the line to make it sendable
 ---
 Markdown before the first `## ` is the intro, shown at the top.
 

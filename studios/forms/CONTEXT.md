@@ -38,7 +38,8 @@ Don't read the app source, other studios, or the answers to earlier forms.
    itself is public: no names in it.
 6. **Write the teacher notes** (`## Teacher notes`): the purpose in one line, and for
    each section which lessons or syllabus rows its answers feed.
-7. **Save** as `content/forms/<slug>.md` with `draft: true`, then read it back once
+7. **Save** as `content/forms/<slug>.md` (no draft flag: nobody sees a form until Jamie
+   sends it), then read it back once
    against `formats.md`: frontmatter complete, every question line starts with a kind,
    every `one`/`many` has two or more options, every `scale` has exactly two labels.
 
@@ -49,9 +50,9 @@ are keyed by section and question wording: reword before the form is sent, not a
 
 ## Gate (Jamie's, never the agent's)
 
-- [ ] Jamie previews the draft in the app (Forms → the form) and edits or asks for changes.
-- [ ] Jamie removes `draft: true`.
-- [ ] Jamie sends it to a student from the form's page. It appears on her profile.
+- [ ] Jamie previews it in the app (Forms → the form) and edits or asks for changes.
+- [ ] Jamie sends it to a student from the form's page. That is the gate: until then no
+      student sees it, and the agent never sends it.
 
 ## Afterwards: where the answers go
 

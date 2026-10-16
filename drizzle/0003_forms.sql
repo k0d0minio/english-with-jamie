@@ -1,4 +1,4 @@
-CREATE TABLE "form_responses" (
+CREATE TABLE IF NOT EXISTS "form_responses" (
 	"form_slug" text NOT NULL,
 	"user_id" text NOT NULL,
 	"answers" jsonb DEFAULT '{}'::jsonb NOT NULL,

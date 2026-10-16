@@ -14,7 +14,7 @@ export default async function ProfilePage() {
   const user = (await getUser())!;
   const [rows, forms] = await Promise.all([formResponsesForUser(user.id), listForms()]);
   const bySlug = new Map(forms.map((f) => [f.slug, f]));
-  const sent = rows.map((r) => ({ r, form: bySlug.get(r.formSlug) })).filter((x) => x.form && !x.form.draft);
+  const sent = rows.map((r) => ({ r, form: bySlug.get(r.formSlug) })).filter((x) => x.form);
 
   return (
     <>

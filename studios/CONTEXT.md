@@ -26,7 +26,7 @@ the name the app uses.
 | [`watch/`](watch/CONTEXT.md) | `content/watch/<slug>.md` | `draft: true` → removed |
 | [`read/`](read/CONTEXT.md) | `content/read/<slug>.md` | `draft: true` → removed |
 | [`reference/`](reference/CONTEXT.md) | `content/reference/grammar/<slug>.md` | `draft: true` → removed |
-| [`forms/`](forms/CONTEXT.md) | `content/forms/<slug>.md` | `draft: true` → removed, then Jamie sends it in the app |
+| [`forms/`](forms/CONTEXT.md) | `content/forms/<slug>.md` | none: Jamie sending it to a student in the app is the gate |
 
 The student's answers to forms are the one input that is not in git: they live in the
 database and are pulled to `_private/forms/` (gitignored) with `npm run forms:pull`.
@@ -50,7 +50,8 @@ Every studio reads these first; they are stable across runs.
 2. **Write only the files the contract names.** One studio, one content folder.
 3. **Drafts first.** Every new file is written behind its gate field. Jamie reviews in
    the app (the teacher view shows drafts with a badge) and flips the gate by editing the
-   frontmatter. The agent never flips it.
+   frontmatter. The agent never flips it. Forms are the exception: no flag, because a
+   form reaches a student only when Jamie sends it from the app.
 4. **Idempotent by name.** A file is identified by its name. Re-running a studio for the
    same lesson or entry edits that file; it does not create a sibling.
 5. **No personal data.** The repo is public. Nothing identifying goes into content,

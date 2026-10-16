@@ -16,7 +16,7 @@ export default async function TeachFormsPage() {
     <>
       <PageHeader
         title="Forms"
-        lead="Questions for students, written in the forms studio. Publish one by removing draft: true, then send it from its page. Answers stay in the database; pull them for a studio with npm run forms:pull."
+        lead="Questions for students, written in the forms studio. Students only see a form once you send it from its page. Answers stay in the database; pull them for a studio with npm run forms:pull."
       />
       {forms.length ? (
         <div className="grid gap-4 md:grid-cols-2">
@@ -25,7 +25,6 @@ export default async function TeachFormsPage() {
             return (
               <Card key={f.slug} className="flex flex-col">
                 <div className="mb-2 flex items-center gap-2">
-                  {f.draft ? <Badge>draft</Badge> : <Badge tone="accent">published</Badge>}
                   {f.problems.length ? (
                     <span className="flex items-center gap-1 text-xs text-warm" title={f.problems.join("\n")}>
                       <AlertTriangle className="h-3.5 w-3.5" /> {f.problems.length}

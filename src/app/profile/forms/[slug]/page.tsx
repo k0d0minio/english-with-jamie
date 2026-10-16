@@ -14,7 +14,7 @@ export default async function FillFormPage({ params }: { params: Promise<{ slug:
   if ((await requireRole()) === "teacher") redirect(`/teach/forms/${slug}`);
   const user = (await getUser())!;
   const [form, row] = await Promise.all([getForm(slug), getFormResponse(slug, user.id)]);
-  if (!form || form.draft || !row) notFound();
+  if (!form || !row) notFound();
 
   return (
     <div className="mx-auto max-w-3xl">

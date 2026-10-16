@@ -18,11 +18,11 @@ function refresh(slug: string) {
   revalidatePath("/");
 }
 
-/** Teacher only: put a published form in a student's profile. */
+/** Teacher only: put a form in a student's profile. Sending is what makes a form live. */
 export async function sendForm(slug: string, userId: string) {
   await requireRole("teacher");
   const form = okSlug(slug) ? await getForm(slug) : null;
-  if (!form || form.draft || !userId) return;
+  if (!form || !userId) return;
   await db.insert(schema.formResponses).values({ formSlug: slug, userId }).onConflictDoNothing();
   refresh(slug);
 }
@@ -73,7 +73,7 @@ export async function saveFormAnswers(slug: string, _prev: ActionState, fd: Form
   await requireRole("student");
   const user = await getUser();
   const form = okSlug(slug) ? await getForm(slug) : null;
-  if (!user || !form || form.draft) return { error: "This form isn't available any more." };
+  if (!user || !form) return { error: "This form isn't available any more." };
 
   const answers: FormAnswers = {};
   for (const q of form.sections.flatMap((s) => s.questions)) {

@@ -23,7 +23,7 @@ export default async function TeachFormPage({ params }: { params: Promise<{ slug
 
   return (
     <>
-      <PageHeader title={form.title} lead={form.summary} actions={form.draft ? <Badge>draft</Badge> : <Badge tone="accent">published</Badge>} />
+      <PageHeader title={form.title} lead={form.summary} />
       {form.problems.length ? (
         <Card className="mb-6 border-warm/40 bg-warm-soft/40">
           <p className="mb-1 flex items-center gap-1.5 text-sm font-semibold text-warm">
@@ -80,9 +80,7 @@ export default async function TeachFormPage({ params }: { params: Promise<{ slug
         <div className="space-y-6">
           <Card>
             <h2 className="mb-3 font-semibold">Send to</h2>
-            {form.draft ? (
-              <p className="text-sm text-muted">Remove <code>draft: true</code> from the file to send it.</p>
-            ) : students.length ? (
+            {students.length ? (
               <ul className="divide-y divide-line">
                 {students.map((s) => {
                   const r = rows.find((x) => x.userId === s.id);

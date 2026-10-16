@@ -43,6 +43,28 @@ export async function resultsOverview() {
   });
 }
 
+export async function getLedger() {
+  return db.select().from(schema.lessonLedger).orderBy(desc(schema.lessonLedger.date), desc(schema.lessonLedger.id));
+}
+
+export async function lessonBalance() {
+  const [row] = await db
+    .select({
+      paid: sql<number>`coalesce(sum(case when ${schema.lessonLedger.kind} = 'paid' then ${schema.lessonLedger.lessons} else 0 end), 0)::int`,
+      taught: sql<number>`coalesce(sum(case when ${schema.lessonLedger.kind} = 'taught' then ${schema.lessonLedger.lessons} else 0 end), 0)::int`,
+    })
+    .from(schema.lessonLedger);
+  const paid = row?.paid ?? 0;
+  const taught = row?.taught ?? 0;
+  return { paid, taught, remaining: paid - taught };
+}
+
+/** Bank details for topping up, from the BANK_DETAILS env var (never committed: the repo is public). */
+export function bankDetails(): string | null {
+  const raw = process.env.BANK_DETAILS?.replace(/\\n/g, "\n").trim();
+  return raw || null;
+}
+
 // ---- forms ------------------------------------------------------------------
 
 export async function formResponsesForUser(userId: string) {

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { BookOpen, ClipboardList, GraduationCap, Home, ListChecks, Presentation, BarChart3, LogOut, UserRound, Users } from "lucide-react";
+import { BookOpen, ClipboardList, GraduationCap, Home, ListChecks, Presentation, BarChart3, LogOut, UserRound, Users, Wallet } from "lucide-react";
 import type { Role } from "@/lib/auth";
 import { logout } from "@/actions/auth";
 import { Badge } from "@/components/ui/card";
@@ -10,6 +10,7 @@ const links = [
   { href: "/lessons", label: "Lessons", icon: GraduationCap },
   { href: "/homework", label: "Homework", icon: ListChecks },
   { href: "/reference", label: "Reference", icon: BookOpen },
+  { href: "/payments", label: "Payments", icon: Wallet },
 ];
 
 export function Nav({ role }: { role: Role }) {

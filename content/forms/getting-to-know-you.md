@@ -1,7 +1,6 @@
 ---
 title: Getting to know you
 summary: A few questions so the lessons are about the things you care about and the moments you want to be ready for.
-draft: true
 ---
 These answers decide what we talk about from lesson two onwards. There are no right
 answers and nothing is marked. Write in English, but don't polish it: a quick, honest

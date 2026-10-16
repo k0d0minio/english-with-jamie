@@ -30,7 +30,6 @@ export type Form = {
   slug: string;
   title: string;
   summary: string;
-  draft: boolean;
   /** Markdown before the first `## `, shown at the top. */
   intro: string;
   /** `## Teacher notes`: never sent to the student. */
@@ -100,7 +99,6 @@ export function parseForm(slug: string, data: Frontmatter, body: string): Form {
     slug,
     title: data.title || slug,
     summary: data.summary ?? "",
-    draft: data.draft === "true",
     intro,
     teacherNotes,
     sections,

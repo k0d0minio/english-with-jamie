@@ -2,7 +2,7 @@ import Link from "next/link";
 import { ArrowRight, ClipboardList, Presentation } from "lucide-react";
 import { getUser, requireRole } from "@/lib/auth";
 import { currentLesson, listForms, listGrammar, listHomework } from "@/lib/content";
-import { allFormResponses, formResponsesForUser, homeworkDoneSet } from "@/lib/queries";
+import { allFormResponses, formResponsesForUser, homeworkDoneSet, lessonBalance } from "@/lib/queries";
 import { getLiveSnapshot } from "@/lib/live";
 import { Badge, Card, Empty } from "@/components/ui/card";
 import { buttonClass } from "@/components/ui/button";
@@ -13,15 +13,22 @@ export const dynamic = "force-dynamic";
 export default async function Home() {
   const role = await requireRole();
   const student = role === "student";
-  const [lesson, homework, done, live, grammar] = await Promise.all([currentLesson(student), listHomework(), homeworkDoneSet(), getLiveSnapshot({ teacher: !student }), listGrammar()]);
+  const [lesson, homework, done, live, grammar, balance] = await Promise.all([
+    currentLesson(student),
+    listHomework(),
+    homeworkDoneSet(),
+    getLiveSnapshot({ teacher: !student }),
+    listGrammar(),
+    lessonBalance(),
+  ]);
   const open = homework.filter((h) => !done.has(h.slug) && (!student || !h.draft)).slice(0, 5);
   const user = (await getUser())!;
   const [responses, forms] = await Promise.all([student ? formResponsesForUser(user.id) : allFormResponses(), listForms()]);
-  const published = new Set(forms.filter((f) => !f.draft).map((f) => f.slug));
+  const formSlugs = new Set(forms.map((f) => f.slug));
   // Student: forms still to send back. Teacher: forms sent back in the last fortnight.
   const fortnight = Date.now() - 14 * 864e5;
   const formsWaiting = responses.filter(
-    (r) => published.has(r.formSlug) && (student ? !r.submittedAt : r.submittedAt && new Date(r.submittedAt).getTime() > fortnight),
+    (r) => formSlugs.has(r.formSlug) && (student ? !r.submittedAt : r.submittedAt && new Date(r.submittedAt).getTime() > fortnight),
   ).length;
 
   return (
@@ -117,6 +124,15 @@ export default async function Home() {
       </div>
 
       <div className="space-y-6">
+        <Link href="/payments" className="block">
+          <Card className="hover:border-accent/50">
+            <h2 className="text-xs font-semibold uppercase tracking-wide text-muted">Lessons left</h2>
+            <div className={balance.remaining <= 2 ? "mt-1 text-3xl font-semibold text-warm" : "mt-1 text-3xl font-semibold text-accent-strong"}>{balance.remaining}</div>
+            <p className="mt-1 text-sm text-muted">
+              {balance.taught} of {balance.paid} paid lessons completed
+            </p>
+          </Card>
+        </Link>
         <Card>
           <h2 className="mb-3 text-xs font-semibold uppercase tracking-wide text-muted">Reference</h2>
           <ul className="space-y-1 text-sm">
