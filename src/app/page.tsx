@@ -2,7 +2,7 @@ import Link from "next/link";
 import { ArrowRight, ClipboardList, Presentation } from "lucide-react";
 import { getUser, requireRole } from "@/lib/auth";
 import { currentLesson, listForms, listGrammar, listHomework } from "@/lib/content";
-import { allFormResponses, formResponsesForUser, homeworkDoneSet, lessonBalance } from "@/lib/queries";
+import { formResponsesForUser, homeworkDoneSet, lessonBalance, recentlySubmittedForms } from "@/lib/queries";
 import { getLiveSnapshot } from "@/lib/live";
 import { Badge, Card, Empty } from "@/components/ui/card";
 import { buttonClass } from "@/components/ui/button";
@@ -23,13 +23,10 @@ export default async function Home() {
   ]);
   const open = homework.filter((h) => !done.has(h.slug) && (!student || !h.draft)).slice(0, 5);
   const user = (await getUser())!;
-  const [responses, forms] = await Promise.all([student ? formResponsesForUser(user.id) : allFormResponses(), listForms()]);
-  const formSlugs = new Set(forms.map((f) => f.slug));
   // Student: forms still to send back. Teacher: forms sent back in the last fortnight.
-  const fortnight = Date.now() - 14 * 864e5;
-  const formsWaiting = responses.filter(
-    (r) => formSlugs.has(r.formSlug) && (student ? !r.submittedAt : r.submittedAt && new Date(r.submittedAt).getTime() > fortnight),
-  ).length;
+  const [responses, forms] = await Promise.all([student ? formResponsesForUser(user.id) : recentlySubmittedForms(), listForms()]);
+  const formSlugs = new Set(forms.map((f) => f.slug));
+  const formsWaiting = responses.filter((r) => formSlugs.has(r.formSlug) && (!student || !r.submittedAt)).length;
 
   return (
     <div className="grid gap-6 lg:grid-cols-3">

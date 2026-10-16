@@ -79,6 +79,14 @@ export async function getFormResponse(formSlug: string, userId: string) {
   return row ?? null;
 }
 
+/** Forms students have sent back in the last `days` days, for the teacher's dashboard. */
+export async function recentlySubmittedForms(days = 14) {
+  return db
+    .select()
+    .from(schema.formResponses)
+    .where(sql`${schema.formResponses.submittedAt} > now() - make_interval(days => ${days})`);
+}
+
 export async function allFormResponses() {
   return db.select().from(schema.formResponses).orderBy(desc(schema.formResponses.sentAt));
 }
