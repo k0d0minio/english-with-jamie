@@ -12,6 +12,9 @@ To show the gate card, run `~/jarvis_system/bin/baxter_gate.py card <number>` in
 if that file exists. The card shows the summary, the section How to test of `handoff.md`,
 the checks, and a link to the preview. BAXTER says the first words of How to test.
 
+After the tick, the card has the button "Merge now". It runs the Release stage
+(`release.sh`) for that pull request. The tick does not merge. Release merges.
+
 ## The two gates
 | Gate | Anchor in the pull request body | Meaning of the tick |
 |---|---|---|
@@ -32,7 +35,7 @@ not ticked and give the pull request link.
 
 ## What enforces a gate
 - Build stops when `spec_approved` is not `yes`.
-- `merge.sh` refuses when `ready_to_merge` is not `yes`.
+- `release.sh` and `merge.sh` refuse when `ready_to_merge` is not `yes`.
 - The CI job `icm-gate` fails while Ready to merge is not ticked. The repo ruleset
   requires that job, so GitHub refuses the merge too.
 
