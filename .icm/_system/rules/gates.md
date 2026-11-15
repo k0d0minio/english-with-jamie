@@ -1,0 +1,35 @@
+# Gates
+
+A gate is a checkbox in the body of the run's pull request. Only the operator ticks a gate.
+An agent reads a gate. An agent never ticks, edits or removes a gate box.
+
+## The two gates
+| Gate | Anchor in the pull request body | Meaning of the tick |
+|---|---|---|
+| Spec approved | `<!-- gate:spec-approved -->` | Build can start |
+| Ready to merge | `<!-- gate:ready-to-merge -->` | The operator tested the change. The merge is authorised |
+
+The gate is the first checkbox line below its anchor.
+
+- A spine run (Define, Build, Release) has both gates.
+- A lane run (bug, tweak, chore) has only Ready to merge.
+- A missing anchor means "not required". It does not mean "not ticked".
+
+## How to read a gate
+Run `.icm/_system/scripts/resolve-run.sh <ticket>`. It prints `spec_approved:` and
+`ready_to_merge:` with the value `yes`, `no` or `none`. Do not read a gate from memory or
+from chat. If the operator says "approved" and the box is not ticked, say that the box is
+not ticked and give the pull request link.
+
+## What enforces a gate
+- Build stops when `spec_approved` is not `yes`.
+- `merge.sh` refuses when `ready_to_merge` is not `yes`.
+- The CI job `icm-gate` fails while Ready to merge is not ticked. The repo ruleset
+  requires that job, so GitHub refuses the merge too.
+
+`ci-status.sh` does not count `icm-gate`. A pull request that waits only for the tick
+is GREEN.
+
+## After a spec change
+`new-run.sh <ticket> --refresh-body` writes the pull request body again from `spec.md`. All
+boxes are then not ticked. Tell the operator to tick Spec approved again.

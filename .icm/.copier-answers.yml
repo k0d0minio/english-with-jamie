@@ -1,0 +1,5 @@
+# Copier writes this file. Do not edit it. blueprint/bin/update-repo.sh reads it.
+default_branch: main
+language: en
+slug: english-with-jamie
+ticket_source: markdown
