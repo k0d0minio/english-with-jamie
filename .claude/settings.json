@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "SessionStart": [
+      { "hooks": [{ "type": "command", "command": "bash \"$CLAUDE_PROJECT_DIR/.icm/_system/hooks/dispatch.sh\" session-start" }] }
+    ],
+    "UserPromptSubmit": [
+      { "hooks": [{ "type": "command", "command": "bash \"$CLAUDE_PROJECT_DIR/.icm/_system/hooks/dispatch.sh\" user-prompt" }] }
+    ],
+    "PreToolUse": [
+      { "hooks": [{ "type": "command", "command": "bash \"$CLAUDE_PROJECT_DIR/.icm/_system/hooks/dispatch.sh\" pre-tool-use" }] }
+    ],
+    "Stop": [
+      { "hooks": [{ "type": "command", "command": "bash \"$CLAUDE_PROJECT_DIR/.icm/_system/hooks/dispatch.sh\" stop" }] }
+    ]
+  }
+}
