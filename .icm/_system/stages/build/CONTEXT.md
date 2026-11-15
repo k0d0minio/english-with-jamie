@@ -26,10 +26,12 @@ Make the change that the approved spec describes, on the run's branch, until CI 
 8. `.icm/_system/scripts/ci-status.sh <number> --watch`. On RED, read the failed check,
    correct the cause, push and read again. On PENDING after the wait, stop and say so.
 9. Compare the result with each acceptance criterion. Write in `handoff.md` which
-   criteria are met and how the operator can see each one. Do not tick a box.
+   criteria are met. Write the section How to test: 1 to 3 short sentences that can be
+   said aloud. Do not tick a box.
 10. Set `status.md` to `phase: release`. Commit and push.
-11. Stop with the stop report. The operator's acts: test the change on the preview,
-    tick **Ready to merge**, then say `release <ticket>`.
+11. Show the gate card (`rules/gates.md`).
+12. Stop with the stop report. The operator's acts: test the change on the preview,
+    tick **Ready to merge** on GitHub or on the HUD card, then say `release <ticket>`.
 
 ## Outputs
 - The product change, committed and pushed on the run's branch.

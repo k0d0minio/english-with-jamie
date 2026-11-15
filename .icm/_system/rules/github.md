@@ -11,7 +11,7 @@ scripts. Do not open, change or merge a pull request by another route.
 | Read the run, the pull request and the gates | `resolve-run.sh <ticket>` |
 | Read CI | `ci-status.sh <number> [--watch]` |
 | Change draft to ready | `gh pr ready <number>` |
-| Merge | `merge.sh <number>` |
+| Close the run and merge | `release.sh <number>` |
 
 `gh pr ready` does not work in a cloud session. There, ask the operator to click "Ready
 for review".

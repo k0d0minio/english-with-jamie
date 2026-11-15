@@ -9,17 +9,20 @@
 #   --watch  reads again each 15 seconds while a check is pending or no check is listed,
 #            30 minutes at most. The wait is in the script and costs no model turn.
 #
-# The check icm-gate is not counted: it waits for the operator's tick (rules/gates.md).
+#   --all    counts icm-gate too. release.sh uses it before the merge.
+#
+# Without --all the check icm-gate is not counted: it waits for the operator's tick.
 # Last line: RESULT: GREEN (exit 0) | RESULT: RED (exit 1) | RESULT: PENDING (exit 8).
 set -euo pipefail
 here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 . "$here/lib/project.sh"
 . "$here/lib/gh.sh"
 
-number="" watch=0
+number="" watch=0 skip=$'^icm-gate\t'
 for a in "$@"; do
   case "$a" in
     --watch) watch=1 ;;
+    --all) skip=$'^\t' ;;
     '' | *[!0-9]*) stop "usage: ci-status.sh <pull request number> [--watch]" ;;
     *) number="$a" ;;
   esac
@@ -31,7 +34,7 @@ cd "$(icm_root)"
 deadline=$((SECONDS + 1800))
 while :; do
   sha="$(gh_pr "$number" | jq -r '.head.sha')" || stop "the pull request #$number was not read"
-  checks="$(gh_checks "$sha" | grep -v $'^icm-gate\t' || true)"
+  checks="$(gh_checks "$sha" | grep -v "$skip" || true)"
   waiting=0
   if [ -z "$checks" ] || printf '%s\n' "$checks" | cut -f2 | grep -qx pending; then
     waiting=1
