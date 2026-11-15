@@ -3,6 +3,15 @@
 A gate is a checkbox in the body of the run's pull request. Only the operator ticks a gate.
 An agent reads a gate. An agent never ticks, edits or removes a gate box.
 
+The operator ticks Ready to merge in one of two ways:
+- in the pull request on GitHub, or
+- with the button "Tested, tick it" on the gate card of the BAXTER HUD. The HUD then
+  ticks that one box. The press is the operator's act.
+
+To show the gate card, run `~/jarvis_system/bin/baxter_gate.py card <number>` in the repo,
+if that file exists. The card shows the summary, the section How to test of `handoff.md`,
+the checks, and a link to the preview. BAXTER says the first words of How to test.
+
 ## The two gates
 | Gate | Anchor in the pull request body | Meaning of the tick |
 |---|---|---|
