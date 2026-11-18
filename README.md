@@ -27,6 +27,8 @@ Formats the app parses: [`studios/_shared/formats.md`](studios/_shared/formats.m
 - **Auth:** Neon Auth (Managed Better Auth): email + password accounts in the `neon_auth`
   schema. Neon `admin` role = teacher, `user` = student. Public sign-up is off; the teacher
   creates accounts at `/teach/accounts`. No email verification yet.
+  The teacher can also ask for a magic sign-in link on `/login` (Neon Auth magic link
+  plugin); only the address in `TEACHER_EMAIL` gets one.
 - **Realtime:** the teacher writes a single `live_state` row; the student's page polls
   `/api/live` every 1.5 s.
 - **Database holds only state, never content:** the student's answers (`item_answers`),
