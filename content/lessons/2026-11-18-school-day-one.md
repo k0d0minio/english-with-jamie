@@ -1,7 +1,7 @@
 ---
 title: School, day one
-date: 2026-11-18
-status: draft
+date: 2026-11-26
+status: scheduled
 summary: Your first day at a Canadian high school, from the main office to the lunch table: who you are, how to ask for anything politely, and what your semester is going to look like.
 ---
 

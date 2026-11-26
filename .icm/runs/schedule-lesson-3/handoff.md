@@ -2,11 +2,13 @@
 
 ## Next action
 
-<What the next session, or the operator, does first.>
+The operator tests the preview, ticks **Ready to merge** on pull request #9, then says
+`release triage/schedule-lesson-3`. The merge deploys the lesson to production.
 
 ## How to test
 
-<1 to 3 short sentences that can be said aloud: where to go on the preview, what to do, what the operator must see.>
+Sign in as the student on the preview. Open the dashboard and the lessons page.
+"School, day one" shows, with the date 26 November 2026.
 
 ## Blockers
 
@@ -14,4 +16,5 @@
 
 ## Do not touch
 
-- none
+- The filename `2026-11-18-school-day-one.md`. The slug comes from the filename. A rename
+  changes the lesson URL and the key of any data stored for it.
