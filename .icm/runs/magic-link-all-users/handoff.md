@@ -26,15 +26,23 @@ Upstream `GET /get-session?neon_auth_session_verifier=ml-…` needs no challenge
 
 ## Verified
 
+- CI green at d18f52a.
 - Local dev server: the form posts to `/api/auth/sign-in/magic-link` (200) and shows the
-  neutral reply. A return URL with a verifier calls `/api/auth/get-session?neon_auth_session_verifier=…`
-  through the proxy. A bad verifier shows the "did not work" message.
+  neutral reply. A return URL with a verifier makes the browser call
+  `/api/auth/get-session?neon_auth_session_verifier=…`.
+- Vercel preview (`vercel curl`, it has Vercel Authentication): `/api/auth/get-session`
+  with an `ml-` verifier reaches Neon Auth and gets `VERIFICATION_NOT_FOUND`, not a
+  challenge-cookie refusal, so a real verifier is accepted without the cookie. `/login`
+  has no "Teacher" label. `/login?error=INVALID_TOKEN` shows the "did not work" message.
+- Upstream, checked by hand: `get-session` with a non-`ml-` verifier and no cookie gives
+  `SESSION_CHALLENGE_COOKIE_NOT_FOUND`; with an `ml-` verifier it looks the verifier up.
 - Not verified end to end: no test inbox can be read, so no real link was opened.
-- The Vercel preview cannot send a link: its host is not a Neon Auth trusted origin.
+- The preview cannot send a link: its host is not a Neon Auth trusted origin.
 
 ## Next action
 
-The operator tests on production after the merge, or on localhost.
+The operator merges (`release triage/magic-link-all-users`), then tests on the live site.
+`TEACHER_EMAIL` is not read any more; the Vercel env var can stay or be removed.
 
 ## How to test
 
