@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { neonAuth } from "@/lib/neon-auth";
 
-const PUBLIC = ["/login", "/api/health"];
+const PUBLIC = ["/login", "/api/health", "/api/auth"];
 
 // Signed-in check only (and session refresh). Roles are enforced where the data is read:
 // requireRole() in pages and server actions, getRole() in route handlers.
