@@ -5,5 +5,5 @@
 - link: `.icm/intake/triage/magic-link-all-users.md`
 - branch: claude/magic-link-all-users-93f397
 - lane: bug
-- pr: pending
+- pr: #10
 - started: 2026-11-26
