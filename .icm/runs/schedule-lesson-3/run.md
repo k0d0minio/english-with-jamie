@@ -5,5 +5,5 @@
 - link: `.icm/intake/triage/schedule-lesson-3.md`
 - branch: triage/schedule-lesson-3
 - lane: tweak
-- pr: pending
+- pr: #9
 - started: 2026-11-26
