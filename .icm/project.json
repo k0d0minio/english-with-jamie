@@ -6,5 +6,8 @@
   "linear": {
     "team_key": "",
     "org": ""
+  },
+  "requests": {
+    "store": ".icm/requests"
   }
 }

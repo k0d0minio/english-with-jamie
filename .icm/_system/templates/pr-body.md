@@ -10,6 +10,12 @@
 
 @CRITERIA@
 
+## Questions
+
+<!-- questions:start -->
+@QUESTIONS@
+<!-- questions:end -->
+
 ## Gates
 
 <!-- gate:spec-approved -->
