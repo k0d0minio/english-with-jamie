@@ -6,11 +6,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/fields";
 import type { ActionState } from "@/lib/action-state";
 
-export function LoginForm({ next }: { next: string }) {
+/** How the page was reached from a magic link: with a verifier, with an error, or not. */
+export type LinkReturn = "verifier" | "error" | null;
+
+export function LoginForm({ next, linkReturn }: { next: string; linkReturn: LinkReturn }) {
   const [state, action, pending] = useActionState<ActionState, FormData>(login, undefined);
   return (
     <>
-      <MagicLinkReturn next={next} />
+      <MagicLinkReturn next={next} linkReturn={linkReturn} />
       <form action={action} className="mt-6 space-y-3">
         <input type="hidden" name="next" value={next} />
         <Input name="email" type="email" placeholder="Email" autoFocus autoComplete="username" required />
@@ -26,7 +29,6 @@ export function LoginForm({ next }: { next: string }) {
 }
 
 const NEUTRAL = "If that address has an account, a link is on its way. Open it in this browser.";
-const VERIFIER = "neon_auth_session_verifier";
 
 /** Safe in-site path to go to after sign-in. */
 function safeNext(next: string) {
@@ -91,14 +93,13 @@ function MagicLinkForm({ next }: { next: string }) {
  * The magic link comes back here with a one-time verifier in the URL. The browser client
  * trades it for a session cookie through /api/auth, then the page goes on to `next`.
  */
-function MagicLinkReturn({ next }: { next: string }) {
-  const [status, setStatus] = useState<"idle" | "signing-in" | "failed">("idle");
+function MagicLinkReturn({ next, linkReturn }: { next: string; linkReturn: LinkReturn }) {
+  const [status, setStatus] = useState<"idle" | "signing-in" | "failed">(
+    linkReturn === "error" ? "failed" : linkReturn === "verifier" ? "signing-in" : "idle",
+  );
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    if (params.get("error")) return setStatus("failed");
-    if (!params.get(VERIFIER)) return;
-    setStatus("signing-in");
+    if (linkReturn !== "verifier") return;
     authClient
       .getSession()
       .then(({ data }) => {
@@ -106,7 +107,7 @@ function MagicLinkReturn({ next }: { next: string }) {
         else setStatus("failed");
       })
       .catch(() => setStatus("failed"));
-  }, [next]);
+  }, [linkReturn, next]);
 
   if (status === "signing-in") return <p className="mt-6 text-sm text-muted">Signing you in…</p>;
   if (status === "failed") {
